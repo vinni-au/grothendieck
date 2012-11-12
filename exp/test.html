@@ -1,0 +1,98 @@
+<html>
+  <head>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <script type="text/javascript" src="d3.v2.js">
+  </script>
+  <script type="text/javascript">
+
+//COPYIED from http://bl.ocks.org/2942506
+
+function dragmove(dragged) {
+  var x = d3.select(dragged).attr("cx");
+  var y = d3.select(dragged).attr("cy");
+  d3.select(dragged)
+    .attr("cx", Math.max(20, Math.min(800 - 20,
+    +x + d3.event.dx)))
+    .attr("cy", Math.max(20, Math.min(600 - 20,
+    +y + d3.event.dy)));
+  d3.select('#link_line').attr("d", function(d) {  return drawCurve(d); });
+}
+
+    function init() {
+var drag = d3.behavior.drag()
+.origin(Object)
+.on("drag", function(){ dragmove(this); });
+
+      var sampleSVG = d3.select("#pane")
+      .append("svg").attr("width", 800).attr("height", 600);
+    
+      var g = sampleSVG.selectAll("g.node")
+      .data([3])
+      .enter()
+      .append("svg:g")
+      .attr("class", "node")
+      
+    
+    g.append("svg:circle")
+      .attr("r", 20)
+      .attr("cx", 50)
+      .attr("cy", 50)
+      .attr("id", "circle0")
+      .style("fill", "green")
+      .style("stroke", "gray")
+      .call(drag)
+
+
+
+    g.append("svg:circle")
+      .attr("r", 20)
+      .attr("cx", 100)
+      .attr("cy", 100)
+      .attr("id", "circle1")
+      .style("fill", "green")
+      .style("stroke", "gray")
+      .call(drag) 
+    
+
+    
+    var d3color = d3.interpolateRgb("#444", "#999");
+    var link = {source: 0, target: 1, strength: 10}
+//var g_lines = sampleSVG.append("g").attr("class", "lines");
+    g.selectAll(".link_line").data([link]).enter().append("path")
+      .attr("class", "link_line")
+      .attr("fill", function(d) { return "black"; })
+      .attr("id", function(i, d) { return "link_line"; } )
+      .attr("d", function(d){ return drawCurve(d) });
+
+    }
+
+    function drawCurve(d) {
+      var radius = 20
+         var strength_scale = 10
+         var slope = Math.atan2((+d3.select('#circle' + d.target).attr("cy") - d3.select('#circle' + d.source).attr("cy")), (+d3.select('#circle' + d.target).attr("cx") - d3.select('#circle' + d.source).attr("cx")));
+        var slopePlus90 = Math.atan2((+d3.select('#circle' + d.target).attr("cy") - d3.select('#circle' + d.source).attr("cy")), (+d3.select('#circle' + d.target).attr("cx") - d3.select('#circle' + d.source).attr("cx"))) + (Math.PI / 2);
+
+        var sourceX = +d3.select('#circle' + d.source).attr("cx");
+        var sourceY = +d3.select('#circle' + d.source).attr("cy");
+        var targetX = +d3.select('#circle' + d.target).attr("cx");
+        var targetY = +d3.select('#circle' + d.target).attr("cy");
+
+        var arrowOffset = 20;
+        var points = [];
+        points.push([sourceX + radius * Math.cos(slope) - strength_scale * Math.cos(slopePlus90), sourceY + radius * Math.sin(slope) - strength_scale * Math.sin(slopePlus90)]);
+        points.push([sourceX + radius * Math.cos(slope), sourceY + radius * Math.sin(slope)]);
+        points.push([targetX - radius * Math.cos(slope), targetY - radius * Math.sin(slope)]);
+        points.push([targetX - (radius + arrowOffset) * Math.cos(slope) - strength_scale * Math.cos(slopePlus90), targetY - (radius + arrowOffset) * Math.sin(slope) - strength_scale * Math.sin(slopePlus90)]);
+        points.push([targetX - (radius + arrowOffset) * Math.cos(slope) - strength_scale * Math.cos(slopePlus90), targetY - (radius + arrowOffset) * Math.sin(slope) - strength_scale * Math.sin(slopePlus90)]);
+        var d3LineLinear = d3.svg.line().interpolate("linear");
+        return d3LineLinear(points) + "Z";
+    }
+
+
+  </script>
+  </head>
+
+  <body onload="init()">
+    <div id="pane"></div>
+  </body>
+</html>
