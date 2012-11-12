@@ -16,7 +16,7 @@ process_data = (name, args...) ->
   result = operation.exec(params)
 
   #pick visualizer
-  vis = vis_pool["ANY"]
-  vis.show(result)
+  vis = vis_pool["PTS"]
+  vis.show([result])
 
 window.process_data = process_data
