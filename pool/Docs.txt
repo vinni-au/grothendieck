@@ -28,6 +28,11 @@ Class Pool
   structures:array of AlgStructure - algebraic structures in pool
   addStrust(s) - adds AS into pool (for format of agrgument s see sampledata.js), returns undefined if format of s is wrong
   addMorphism(m) - adds morphism into poll (for format of agrgument m see sampledata.js), returns undefined if format of m is wrong
+  structure(id) - returns AS with given id if it's exists in pool, otherwise return undefined
+  morphims(id) - returns morphism with given id if it's exists in pool, otherwise return undefined
+  hasStructure(id) - indicates whether structure with given id exists in pool
+  hasMorphism(id) - indicates whether morphism with given id exists in pool
+  
   
   
 For usage example see index.html

@@ -2,7 +2,7 @@ function validateAS(s, pool) {
   error = {}
   error.msg = []
 
-  ecount = -1
+  var ecount = -1
   if (typeof s.elements == 'undefined') {
     error.msg.push("Elements not defined")
   } else {
@@ -201,8 +201,21 @@ function Pool() {
     return und
   }
   
+  this.morphism = function(id) {
+    for (var i = 0; i < this.morphisms.length; ++i)
+      if (this.morphisms[i].id == id)
+        return this.morphisms[i]
+    var und
+    return und
+  }
+  
   this.hasStructure = function(id) {
     str = this.structure(id)
     return typeof str != 'undefined'
   }  
+  
+  this.hasMorhpism = function(id) {
+    m = this.morphism(id)
+    return typeof m != 'undefined'
+  }
 }
