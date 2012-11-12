@@ -1,0 +1,38 @@
+Class AlgStructure
+  Represents Algebraic Structure
+  
+  id:string - unique name of Algebraic Structure
+  order:int - order of AS (number of elements)
+  elements:array - elements of AS
+  neutral - neutral element
+  table:array of array - Kayley table for AS
+  mult(a,b) - computes a*b
+  hasElement(elem):bool - indicates whether AS have element elem
+  isabelian:bool - indicates whether AS is abelian
+  
+Class Morphism
+  Represents morphism f:A->B
+  
+  id:string - unique name of Morphism
+  from:AlgStructure - Algebraic structure A
+  to:AlgStructure = Algebraic structure B
+  mapsize:int - map's element count
+  rawmap:array of [a,b] - raw map of morphism
+  map(elem) - return value f(elem), undefined if value f(elem) is undefined =)
+  
+Class Pool
+  Represents AS and morphism pool
+  
+  Pool() - constructor
+  morphisms:array of Morphism - morphisms in pool
+  structures:array of AlgStructure - algebraic structures in pool
+  addStrust(s) - adds AS into pool (for format of agrgument s see sampledata.js), returns undefined if format of s is wrong
+  addMorphism(m) - adds morphism into poll (for format of agrgument m see sampledata.js), returns undefined if format of m is wrong
+  structure(id) - returns AS with given id if it's exists in pool, otherwise return undefined
+  morphims(id) - returns morphism with given id if it's exists in pool, otherwise return undefined
+  hasStructure(id) - indicates whether structure with given id exists in pool
+  hasMorphism(id) - indicates whether morphism with given id exists in pool
+  
+  
+  
+For usage example see index.html
