@@ -5,8 +5,8 @@ class MulElAndSet
       return (group.mul_a_b(el, set_el) for set_el in set)
 
 class SimpleMul
-  exec: (args) ->
-    return args[2].mul_a_b(args[0], args[1]);
+  exec: (obj, args) ->
+    return obj.mul_a_b(args[0], args[1]);
 
 class IsSubGroup
   exec: (base, sub) ->

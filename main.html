@@ -5,14 +5,63 @@
     <script type="text/javascript" src="d3.v2.js"></script>
     <script type="text/javascript" src="brain.js"></script>
     <script type="text/javascript">
-      function init() {
-        process_data("a*b", "Rem5", 1, 2)
+      function value_form_select(select_id) {
+        select_obj = document.getElementById(select_id)
+        return select_obj.options[select_obj.selectedIndex].value
       }
+
+      function process_request() {
+        dp_id = value_form_select("structure_picker")
+        act_id = value_form_select("action_picker")
+
+        if (act_id == "mult") {
+          el1 = parseInt(document.getElementById("el1").value, 10)
+          el2 = parseInt(document.getElementById("el2").value, 10)
+          document.getElementById("grot").innerHTML = ""
+
+          rem_base = parseInt(document.getElementById("base").value, 10)
+          process_data(act_id, {"id":dp_id, 'args':[rem_base]}, el1, el2)
+        }
+      }
+
+      function structure_changed() {
+        if (value_form_select("structure_picker") == "Rem") {
+          document.getElementById("aux_str_attrs").innerHTML = "Set modulo <input id='base' type='text'></input>"
+        } else {
+          document.getElementById("aux_str_attrs").innerHTML = ""
+        }
+      }
+
+      function action_changed() {
+        if (value_form_select("action_picker") == "mult") {
+          document.getElementById("aux_action_attrs").innerHTML = "Set el1 <input id='el1' type='text'><br/></input> Set el2 <input id='el2' type='text'></input>"
+        } else {
+          document.getElementById("aux_action_attrs").innerHTML = ""
+        }
+      }
+
     </script>
   
   </head>
 
-  <body onload="init()">
-    <div id="grot"></div>
+  <body>
+    <div id="contols" style="float:left; width:300pt; height:200pt;background-color:#FFA500;" >
+      Structure: 
+      <select id="structure_picker" onchange="structure_changed()">
+        <option value="TBD" >TBD</option>
+        <option value="Rem" >Group Rem+</option>
+      </select>
+      <div id="aux_str_attrs" ></div>
+      <br/>
+      Action:
+      <select id="action_picker" onchange="action_changed()">
+        <option value="TBD" >TBD</option>
+        <option value="mult" >Perform Operation With Elements</option>
+      </select>
+      <div id="aux_action_attrs" ></div>
+      <br/>
+      <button onclick="process_request();">Exec</button>
+    </div>
+    <div id="grot" style="float:left;" ></div>
   </body>
 </html>

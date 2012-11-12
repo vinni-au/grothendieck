@@ -1,22 +1,32 @@
+class Action
+  constructor: (@op_id, @vis_id) ->
+  perform_operation: (object, args) ->
+    operation = operation_pool[@op_id]
+    operation.exec(object, args)
+  perform_visualization: (op_data) ->
+    vis = vis_pool[@vis_id]
+    if not (op_data instanceof Array)
+      op_data = [op_data]
+    vis.show(op_data)
 
-determine_dp = (args) ->
-  dp_type = args[0]
-  switch dp_type
-    when "Rem5" then new Rem5Provider()
+determine_dp = (provider_data) ->
+  provider_id = provider_data["id"]
+  switch provider_id
+    when "Rem" then providers["Rem+"].parse(provider_data['args'])
     else new RawDataParser()
 
-process_data = (name, args...) ->
-  dp = determine_dp(args)
-  data = dp.parse()
+process_data = (action_id, provider_data, args...) ->
+  structure = determine_dp(provider_data)
 
   #pick operation
-  operation = operation_pool[name]
-  params = args[1..]
-  params.push(data)
-  result = operation.exec(params)
+  action = actions_pool[action_id]
+  op_data = action.perform_operation(structure, args)
+  action.perform_visualization(op_data)
+  
+providers = {"Rem+": new AddRemProvider, "*": new RawDataParser()} 
 
-  #pick visualizer
-  vis = vis_pool["PTS"]
-  vis.show([result])
+actions_pool = {
+ "mult" : new Action("a*b", "PTS")
+}
 
 window.process_data = process_data
