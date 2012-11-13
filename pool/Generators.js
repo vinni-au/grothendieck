@@ -39,7 +39,7 @@ function GenerateRemS(modulo) {
 }
 
 //indexes is array of indexes
-function GenerateMorphism(group, indexes) {
+function GenerateEndomorphism(group, indexes) {
   var und
   if (group.order != indexes.length)
     return und
@@ -65,4 +65,13 @@ function GenerateMorphism(group, indexes) {
   }  
   
   return morphism
+}
+
+function GenerateRandomEndomorphism(group)
+{
+  ind = [0]
+  for (var i = 1; i < group.order; ++i)
+    ind.push(Math.floor(Math.random() * (group.order)))
+
+  return GenerateEndomorphism(group, ind)  
 }

@@ -38,8 +38,11 @@ Class Pool
 Function GenerateRemS(modulo)
   Generates Rem(n)+ group with given modulo
   
-Function GenerateMorphism(group, indexes)
-  Generates automorphism with given group and indexes. Returns undefined if there's something wrong with indexes
-  permutation is a permutation of indexes of elements of group like [0,3,3,2,1]
+Function GenerateEndomorphism(group, indexes)
+  Generates endomorphism with given group and indexes. Returns undefined if there's something wrong with indexes
+  indexes is array of indexes of elements of group like [0,3,3,2,1]
+  
+Function GenerateRandomEndomorphism(group)
+  Generates random endomorphism with given group
   
 For usage example see index.html

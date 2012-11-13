@@ -10,12 +10,12 @@
         <script>
           pool = new Pool();
           s = GenerateRemS(4)
-          m = GenerateMorphism(s, [0,2,2,2])
           pool.structures.push(s)
-          if (typeof m != 'undefined')
+          m = GenerateRandomEndomorphism(s)
+          if (typeof m != 'undefined') {
             pool.morphisms.push(m)
-          alert(s.elements[1] + " maps to " + m.map(s.elements[1]))
-          
+            alert(s.elements[1] + " maps to " + m.map(s.elements[1]))
+          }          
         </script>
     </body>
 </html>
