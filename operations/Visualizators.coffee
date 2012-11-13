@@ -304,16 +304,14 @@ class FactorSetVis
 
     nodes = []
 
-    radius = if is_str_huge(group) then 200 else 100
-    curr_alpha = 0
-    delta_alpha = 2 * Math.PI / group.order
-
+    cl_y = {}
+    for i in [1..cluster]
+      cl_y[i] = 0
     for memb in group.elements
-      coord_x = radius * Math.cos(curr_alpha) + 300
-      coord_y = radius * Math.sin(curr_alpha) + 220
-      nodes.push({x:coord_x, y:coord_y, ind: indexof(memb, group.elements), name: memb, fixed: 1, cluster: cl_by_el[memb]})
-      curr_alpha += delta_alpha
-
+      el_cluster = cl_by_el[memb]
+      nodes.push({x: 0, y:cl_y[el_cluster], ind: indexof(memb, group.elements), name: memb, fixed: 1, cluster: el_cluster})
+      cl_y[cl_by_el[memb]] += 50
+      
     w = 700
     h = 600
 
@@ -344,10 +342,9 @@ class FactorSetVis
     text = svg.append("svg:g").selectAll("g").data(force.nodes()).enter().append("svg:g");
     text.append("svg:text").attr("x", 8).attr("y", ".31em").text((d) -> d.name);
 
-    
     force.on("tick", (e) ->
-      circle.attr("transform", (d) -> "translate(#{d.x}, #{d.y})")
-      text.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
+      circle.attr("transform", (d) -> "translate(#{20 + 50 * d.cluster}, #{20 + d.y})")
+      text.attr("transform", (d) -> "translate(#{20 + 50 * d.cluster},#{20 + d.y})")
     )
 
 
