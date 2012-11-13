@@ -2,13 +2,15 @@ Class AlgebraicStructure
   Represents Algebraic Structure
   
   name:string - unique name of algebraic structure
+  type:strint - type of AS ("group", "monoid")
   order:int - order of AS (number of elements)
   elements:array - elements of AS
   neutral - neutral element
   table:array of array - Kayley table for AS
   mult(a,b) - computes a*b
+  inverse(elem) - computes inverse element for given elem
   hasElement(elem):bool - indicates whether AS have element elem
-  isabelian:bool - indicates whether AS is abelian
+  properties:array of string - properties of AS ("abelian", "cyclic" for group)
   
 Class Morphism
   Represents morphism f:A->B
@@ -32,5 +34,12 @@ Class Pool
   morphims(name) - returns morphism with given name if it's exists in pool, otherwise return undefined
   hasStructure(name) - indicates whether structure with given name exists in pool
   hasMorphism(name) - indicates whether morphism with given name exists in pool
+  
+Function GenerateRemS(modulo)
+  Generates Rem(n)+ group with given modulo
+  
+Function GenerateMorphism(group, indexes)
+  Generates automorphism with given group and indexes. Returns undefined if there's something wrong with indexes
+  permutation is a permutation of indexes of elements of group like [0,3,3,2,1]
   
 For usage example see index.html

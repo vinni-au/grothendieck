@@ -1,4 +1,4 @@
-function RemSGenerate(modulo) {
+function GenerateRemS(modulo) {
   var group = {
     name: "Rem(" + modulo + ")+",
     elements: [],
@@ -8,8 +8,9 @@ function RemSGenerate(modulo) {
     type: "group",
     table: []
   }
+  
   for (var i = 0; i < modulo; ++i)
-    group.elements.push[i]
+    group.elements.push(i)
    
   group.mult = function(a,b) {
     return (a+b)%group.order
@@ -35,4 +36,33 @@ function RemSGenerate(modulo) {
   group.properties.push("cyclic")
     
   return group
+}
+
+//indexes is array of indexes
+function GenerateMorphism(group, indexes) {
+  var und
+  if (group.order != indexes.length)
+    return und
+  if (group.elements[indexes[0]] != group.neutral)
+    return und
+  
+  var morphism = {
+    name: group.name + "_aut",
+    from: group,
+    to: group,
+    rawmap: [],
+    mapsize: indexes.length
+  }
+  
+  for (var i = 0; i < indexes.length; ++i)
+    morphism.rawmap.push([ group.elements[i], 
+                           group.elements[indexes[i]] ])
+  
+  morphism.map = function(elem) {
+    for (var i = 0; i < morphism.mapsize; ++i)
+      if (morphism.rawmap[i][0] == elem)
+        return morphism.rawmap[i][1]
+  }  
+  
+  return morphism
 }
