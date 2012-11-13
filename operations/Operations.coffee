@@ -6,7 +6,7 @@ class MulElAndSet
 
 class SimpleMul
   exec: (obj, args) ->
-    return obj.mul_a_b(args[0], args[1]);
+    return obj.mult(args[0], args[1]);
 
 class IsSubGroup
   exec: (base, sub) ->

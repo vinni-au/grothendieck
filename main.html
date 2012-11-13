@@ -7,10 +7,10 @@
     <script type="text/javascript" src="libs/d3.v2.js"></script>
     <script type="text/javascript" src="libs/jquery-1.8.2.min.js"></script>
     <script type="text/javascript" src="libs/jquery-ui-1.9.1.custom.min.js"></script>
-    <script type="text/javascript" src="brain.js"></script>
     <script type="text/javascript" src="pool/sampledata.js"></script>
     <script type="text/javascript" src="pool/Pool.js"></script>
     <script type="text/javascript" src="pool/Generators.js"></script>
+    <script type="text/javascript" src="brain.js"></script>
     <script type="text/javascript">
       function value_form_select(select_id) {
         return $('#'+select_id).find(":selected").attr("value");
@@ -36,7 +36,7 @@
         var aux_attr = $("#aux_str_attrs")
         var aux_html = ""
 
-        if (value_form_select("structure_picker") == "Rem") {
+        if (value_form_select("structure_picker") == "Rem+" || value_form_select("structure_picker") == "Rem*") {
           aux_html = "Set modulo <input id='base' type='text'></input>"
         }
         aux_attr.html(aux_html)
@@ -61,7 +61,8 @@
       Structure: 
       <select id="structure_picker" onchange="structure_changed()">
         <option value="TBD" selected="selected" >TBD</option>
-        <option value="Rem" >Group Rem+</option>
+        <option value="Rem+" >Group Rem+</option>
+        <option value="Rem*" >Group Rem*</option>
       </select>
       <div id="aux_str_attrs" ></div>
 

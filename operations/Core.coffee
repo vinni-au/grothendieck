@@ -13,8 +13,9 @@ class Action
 determine_dp = (provider_data) ->
   provider_id = provider_data["id"]
   switch provider_id
-    when "Rem" then providers["Rem+"].parse(provider_data['args'])
-    else new RawDataParser()
+    when "Rem+" then providers["Rem+"](provider_data['args'])
+    when "Rem*" then providers["Rem*"](provider_data['args'])
+    else {}
 
 process_data = (action_id, provider_data, args...) ->
   structure = determine_dp(provider_data)
@@ -23,8 +24,6 @@ process_data = (action_id, provider_data, args...) ->
   action = actions_pool[action_id]
   op_data = action.perform_operation(structure, args)
   action.perform_visualization(op_data)
-  
-providers = {"Rem+": new AddRemProvider, "*": new RawDataParser()} 
 
 actions_pool = {
  "mult" : new Action("a*b", "PTS"),

@@ -107,7 +107,7 @@ class MorphismVis
     ellipse_b.attr("ry", max_by/2 );
     ellipse_b.attr("rx", 50 );
   
-    #{Per-type markers, as they don't inherit styles.}
+    #{Per-type markers, as they don''t inherit styles.}
     svg.append("svg:defs").selectAll("marker")
       .data(["plain", "dotted"])
     .enter().append("svg:marker")
@@ -176,27 +176,31 @@ class MorphismVis
 
 
 HUGE_CRITERIA = 10
-is_str_huge = (structure) -> structure.get_members().length > HUGE_CRITERIA
+is_str_huge = (structure) -> structure.order > HUGE_CRITERIA
 
 class CayleyTableVis
   show: (data) ->
-    structure = data[0]
-
+    struct = data[0]
+    console.log(struct)
     links = []
-    for i in [0..structure.get_members().length-1]
-      for j in [0..structure.get_members().length-1]
-        #todo Fix label
-        links.push({source: i, src: i, dest:structure.mul_a_b(i, j), target: structure.mul_a_b(i, j), label:j, type: "plain"})
+    for i in [0..struct.order-1]
+      for j in [0..struct.order-1]
+        prod = struct.mult(struct.elements[i], struct.elements[j])
+        prod_i = struct.elements.indexOf(prod)
+
+        links.push({
+            source: i, src: i, dest:prod_i, target: prod_i, label:struct.elements[j], type: "plain"
+        })
     nodes = []
 
-    radius = if is_str_huge(structure) then 200 else 100
+    radius = if is_str_huge(struct) then 200 else 100
     curr_alpha = 0
-    delta_alpha = 2 * Math.PI / structure.get_members().length
+    delta_alpha = 2 * Math.PI / struct.order
 
-    for memb in structure.get_members()
+    for memb in struct.elements
       coord_x = radius * Math.cos(curr_alpha) + 300
-      coord_y = radius * Math.sin(curr_alpha) + 200
-      nodes.push({x:coord_x, y:coord_y, ind: memb, name: memb, fixed: 1})
+      coord_y = radius * Math.sin(curr_alpha) + 220
+      nodes.push({x:coord_x, y:coord_y, ind: indexof(memb, struct.elements), name: memb, fixed: 1})
       curr_alpha += delta_alpha
     w = 700
     h = 600
@@ -209,7 +213,7 @@ class CayleyTableVis
       .attr("id", String).attr("viewBox", "0 -5 10 10").attr("refX", 15).attr("refY", -1.5).attr("markerWidth", 6)
       .attr("markerHeight", 6).attr("orient", "auto").append("svg:path").attr("d", "M0,-5L10,0L0,0");
     ###
-    #NO LOOPS
+
     path = svg.append("svg:g").selectAll("path").data(force.links())
       .enter().append("svg:path").attr("class", (d) -> "link " + d.type)
       #.attr("marker-end", (d) -> if d.src != d.desc then "url(##{d.type})" else "")
@@ -222,26 +226,26 @@ class CayleyTableVis
         d3.select(this).style("fill", "orange");
         d3.selectAll("path.link").filter((el) -> el.src == d.ind).attr("class", "link selected")
         
-        if is_str_huge(structure)
-          for i in [0..structure.get_members().length-1]
+        if is_str_huge(struct)
+          for i in [0..struct.order-1]
             d3.select("#t_#{d.ind}_#{i}").attr("class", "visible")
       )
       .on("mouseout", (d) ->
         d3.select(this).style("fill", "gray");
         d3.selectAll("path").attr("class", "link plain")
 
-        if is_str_huge(structure)
-          for i in [0..structure.get_members().length-1]
+        if is_str_huge(struct)
+          for i in [0..struct.order-1]
             d3.select("#t_#{d.ind}_#{i}").attr("class", "invisible")
       ).call(force.drag);
     
     text = svg.append("svg:g").selectAll("g").data(force.nodes()).enter().append("svg:g");
     text.append("svg:text").attr("x", 8).attr("y", ".31em").text((d) -> d.name);
 
-    link_text_style = if is_str_huge(structure) then "invisible" else "visible"
+    link_text_style = if is_str_huge(struct) then "invisible" else "visible"
     text_links = svg.append("svg:g").selectAll("g").data(force.links())
       .enter().append("svg:text").attr("id", (d) -> "t_#{d.src}_#{d.dest}").attr("class", link_text_style).append("svg:textPath")
-      .attr("xlink:href", (d) -> "##{d.src}_#{d.dest}").attr("startOffset", (d) -> if d.src == d.dest then 50 else 120)
+      .attr("xlink:href", (d) -> "##{d.src}_#{d.dest}").attr("startOffset", (d) -> if d.src == d.dest then 90 else 120)
       .text((d) -> d.label)
 
 
@@ -259,8 +263,6 @@ class CayleyTableVis
           "M#{d.source.x}, #{d.source.y}C#{d.source.x},#{d.source.y-50},#{d.source.x-100},#{d.source.y},#{d.source.x},#{d.source.y}"
       )
     )
-
-
 
 vis_pool = {"ANY": new SimpleVis, "PTS": new SimplePointsVis, "STR_SHOW": new CayleyTableVis, "MOR": new MorphismVis}
 window.vis_pool = vis_pool

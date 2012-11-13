@@ -1,4 +1,5 @@
-function GenerateRemS(modulo) {
+function GenerateRemS(args) {
+  modulo = args[0]
   var group = {
     name: "Rem(" + modulo + ")+",
     elements: [],
@@ -35,6 +36,59 @@ function GenerateRemS(modulo) {
   group.properties.push("abelian")
   group.properties.push("cyclic")
     
+  return group
+}
+
+function gcd(a, b) {
+  while (b != 0) {
+    tmp = a
+    a = b
+    b = tmp % b
+  }
+  return a
+}
+
+function GenerateGroupRemM(args) {
+  modulo = args[0]
+  var group = {
+    name: "Rem(" + modulo + ")*",
+    elements: [],
+    order: 0,
+    neutral: 1,
+    properties: [],
+    type: "group",
+    table: [],
+    inv_map: {}
+  }
+  
+  for (var i = 1; i < modulo; ++i)
+    if (gcd(i, modulo) == 1)
+      group.elements.push(i)
+  group.order = group.elements.length
+   
+  group.mult = function(a,b) {
+    return (a * b) % modulo
+  }
+  
+  for (var i = 0; i < group.order; ++i) {
+    group.table.push([])
+    for (var j = 0; j < group.order; ++j)
+      group.table[i][j] = (group.elements[i] * group.elements[j]) % modulo
+      if (group.table[i][j] == group.neutral) {
+        group.inv_map[i] = group.elements[j]
+      }
+  }      
+  
+  group.hasElement = function(elem) {
+    return (elem >= 0 && elem < group.order)
+  }
+  
+  group.inverse = function(elem) {
+    return group.inv_map[elem]
+  }
+  
+  group.properties.push("abelian")
+  
   return group
 }
 
@@ -117,3 +171,5 @@ function GenerateRandomMorphism(group1, group2) {
   
   return morphism
 }
+
+providers = {"Rem+": GenerateRemS, "Rem*": GenerateGroupRemM} 
