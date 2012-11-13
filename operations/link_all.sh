@@ -7,4 +7,6 @@ echo -e '\n' >> brain.coffee
 cat Core.coffee >> brain.coffee
 
 coffee -c brain.coffee
-cp brain.js ../
+rm brain.coffee
+
+mv brain.js ../
