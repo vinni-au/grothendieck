@@ -15,11 +15,12 @@ determine_dp = (provider_data) ->
   switch provider_id
     when "Rem+" then providers["Rem+"](provider_data['args'])
     when "Rem*" then providers["Rem*"](provider_data['args'])
+    when "Raw" then providers["Raw"](provider_data['args'])
     else {}
 
 process_data = (action_id, provider_data, args...) ->
   structure = determine_dp(provider_data)
-
+  console.log(structure)
   #pick operation
   action = actions_pool[action_id]
   op_data = action.perform_operation(structure, args)

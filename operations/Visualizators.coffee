@@ -175,11 +175,8 @@ class MorphismVis
     );
 
 
-HUGE_CRITERIA = 10
+HUGE_CRITERIA = 9
 is_str_huge = (structure) -> structure.order > HUGE_CRITERIA
-
-
-
 
 class CayleyTableVis
   selected_nodes: [];
@@ -191,19 +188,27 @@ class CayleyTableVis
     else
       this.selected_nodes.push(node)
       return true
-      
+  
+  get_path_id: (d) => "#{d.src}_#{d.dest}"
+  get_link_labels: () -> @link_labels
   show: (data) ->
     struct = data[0]
     console.log(struct)
     links = []
+    @link_labels = {}
     for i in [0..struct.order-1]
       for j in [0..struct.order-1]
         prod = struct.mult(struct.elements[i], struct.elements[j])
         prod_i = struct.elements.indexOf(prod)
 
-        links.push({
-            source: i, src: i, dest:prod_i, target: prod_i, label:struct.elements[j], type: "plain"
-        })
+        link_data = { source: i, src: i, dest:prod_i, target: prod_i, type: "plain" } 
+        link_id = this.get_path_id(link_data)
+        if @link_labels[link_id]?
+          @link_labels[link_id] = "#{@link_labels[link_id]}, #{struct.elements[j]}"
+        else
+          @link_labels[link_id] = "#{struct.elements[j]}"
+          links.push(link_data)
+
     nodes = []
 
     radius = if is_str_huge(struct) then 200 else 100
@@ -215,6 +220,7 @@ class CayleyTableVis
       coord_y = radius * Math.sin(curr_alpha) + 220
       nodes.push({x:coord_x, y:coord_y, ind: indexof(memb, struct.elements), name: memb, fixed: 1})
       curr_alpha += delta_alpha
+
     w = 700
     h = 600
 
@@ -264,15 +270,15 @@ class CayleyTableVis
     text.append("svg:text").attr("x", 8).attr("y", ".31em").text((d) -> d.name);
 
     link_text_style = if is_str_huge(struct) then "invisible" else "visible"
-    text_links = svg.append("svg:g").selectAll("g").data(force.links())
-      .enter().append("svg:text").attr("id", (d) -> "t_#{d.src}_#{d.dest}").attr("class", link_text_style).append("svg:textPath")
-      .attr("xlink:href", (d) -> "##{d.src}_#{d.dest}").attr("startOffset", (d) -> if d.src == d.dest then 90 else 120)
-      .text((d) -> d.label)
-
+    text_links = svg.append("svg:g").selectAll("g").data(force.links()).enter().append("svg:text");
+    text_links.attr("id", (d) -> "t_#{d.src}_#{d.dest}").attr("class", link_text_style).append("svg:textPath")
+      .attr("xlink:href", (d) -> "##{d.src}_#{d.dest}").attr("startOffset", 100)
+      .text((d) -> viz.get_link_labels()[viz.get_path_id(d)])
 
     force.on("tick", (e) ->
       circle.attr("transform", (d) -> "translate(#{d.x}, #{d.y})")
       text.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
+      #text_links.attr("rotate", (d) -> if d.target.x >= then d.source.x "0"else "180")
 
       path.attr("d", (d) ->
         dx = d.target.x - d.source.x
@@ -281,7 +287,7 @@ class CayleyTableVis
         if d.src != d.dest
           "M#{d.source.x}, #{d.source.y}A#{dr},#{dr} 0 0,1 #{d.target.x},#{d.target.y}"
         else
-          "M#{d.source.x}, #{d.source.y}C#{d.source.x},#{d.source.y-50},#{d.source.x-100},#{d.source.y},#{d.source.x},#{d.source.y}"
+          "M#{d.source.x}, #{d.source.y}C#{d.source.x},#{d.source.y-50},#{d.source.x-140},#{d.source.y+20},#{d.source.x},#{d.source.y+4}"
       )
     )
 

@@ -130,6 +130,13 @@ function GenerateEndomorphism(group, indexes) {
   return morphism
 }
 
+pool = new Pool()
+
+function GenerateFromRaw(data) {
+  s = eval('(' + data[0] + ')')
+  return pool.addStruct(s)
+}
+
 function GenerateRandomEndomorphism(group) {
   ind = [0]
   for (var i = 1; i < group.order; ++i)
@@ -172,4 +179,4 @@ function GenerateRandomMorphism(group1, group2) {
   return morphism
 }
 
-providers = {"Rem+": GenerateRemS, "Rem*": GenerateGroupRemM} 
+providers = {"Rem+": GenerateRemS, "Rem*": GenerateGroupRemM, "Raw": GenerateFromRaw} 

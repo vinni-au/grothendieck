@@ -20,15 +20,23 @@
         dp_id = value_form_select("structure_picker")
         act_id = value_form_select("action_picker")
         $("#grot").html("")
+
+        st_info = {}
+        if (value_form_select("structure_picker") == "Rem+" || value_form_select("structure_picker") == "Rem*") {
+          rem_base = parseInt($("#base").attr("value"), 10)
+          st_info = {"id":dp_id, 'args':[rem_base]}
+        } else if (value_form_select("structure_picker") == "Raw") {
+          st_info = {"id":dp_id, 'args':[$("#raw_data").attr("value")]}
+        }
+
         if (act_id == "mult") {
           el1 = parseInt($("#el1").attr("value"), 10)
           el2 = parseInt($("#el2").attr("value"), 10)
 
-          rem_base = parseInt($("#base").attr("value"), 10)
-          process_data(act_id, {"id":dp_id, 'args':[rem_base]}, el1, el2)
+          process_data(act_id, st_info, el1, el2)
         } else if (act_id == "show_structure") {
           rem_base = parseInt($("#base").attr("value"), 10)
-          process_data(act_id, {"id":dp_id, 'args':[rem_base]})
+          process_data(act_id, st_info)
         }
       }
 
@@ -38,6 +46,11 @@
 
         if (value_form_select("structure_picker") == "Rem+" || value_form_select("structure_picker") == "Rem*") {
           aux_html = "Set modulo <input id='base' type='text'></input>"
+        } else if (value_form_select("structure_picker") == "Raw") {
+          aux_html = "Raw data:<textarea cols=45 rows=10 id='raw_data'>"+
+            "{\n  name:'sample',\n  elements:['a','b','c'],\n  neutral:'e',\n"+
+            "  operation:\n   [['a','b','c'],\n    ['b','c','a'],\n    ['c','a','b']]\n}"+
+            "</textarea>"
         }
         aux_attr.html(aux_html)
       }
@@ -63,6 +76,7 @@
         <option value="TBD" selected="selected" >TBD</option>
         <option value="Rem+" >Group Rem+</option>
         <option value="Rem*" >Group Rem*</option>
+        <option value="Raw" >Enter manually</option>
       </select>
       <div id="aux_str_attrs" ></div>
 
