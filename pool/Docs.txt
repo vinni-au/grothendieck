@@ -45,4 +45,7 @@ Function GenerateEndomorphism(group, indexes)
 Function GenerateRandomEndomorphism(group)
   Generates random endomorphism with given group
   
+Function GenerateRandomMorphism(group1, group2)
+  Generates random morphism from group1 to group2
+  
 For usage example see index.html

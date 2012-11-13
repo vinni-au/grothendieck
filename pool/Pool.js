@@ -222,7 +222,9 @@ function Pool() {
   this.addStruct = function (s) {
     str = new AlgebraicStructure(s, this)
     if (typeof str.name != 'undefined') {
-      this.structures.push(str)
+      if (SimpleAssociativityTest(str))
+        this.structures.push(str)
+      else console.log()
     }
     return str
   }
