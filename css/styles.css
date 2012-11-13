@@ -35,7 +35,11 @@ circle {
   stroke-width: 1.5px;
 }
 
-text {
+text.visible {
   font: 10px sans-serif;
   pointer-events: none;
+}
+
+text.invisible {
+  visibility: hidden
 }
