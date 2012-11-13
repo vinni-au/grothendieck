@@ -62,7 +62,7 @@ function GenerateEndomorphism(group, indexes) {
     for (var i = 0; i < morphism.mapsize; ++i)
       if (morphism.rawmap[i][0] == elem)
         return morphism.rawmap[i][1]
-  }  
+  }
   
   return morphism
 }

@@ -1,3 +1,29 @@
+function SimpleAssociativityTest(as) {
+  var count = as.elements.length;
+  for (var i = 0; i < count; ++i) {
+    var a = as.elements[i]
+    var t1 = [] //for  x (a  y)
+    var t2 = [] //for (x  a) y
+    for (var ii = 0; ii < count; ++ii) {
+      t1.push([])
+      for (var jj = 0; jj < count; ++jj)
+        t1[ii][jj] = as.mult(as.elements[ii], as.mult(a, as.elements[jj]))
+    }
+    
+    for (var ii = 0; ii < count; ++ii) {
+      t2.push([])
+      for (var jj = 0; jj < count; ++jj)
+        t2[ii][jj] = as.mult(as.mult(as.elements[ii], a), as.elements[jj])
+    }
+    
+    for (var ii = 0; ii < count; ++ii)
+      for (var jj = 0; jj < count; ++jj)
+        if (t1[ii][jj] != t2[ii][jj])
+          return false
+  }
+  return true
+}
+
 function validateAS(s, pool) {
   error = {}
   error.msg = []
@@ -103,6 +129,7 @@ function validateM(m, pool) {
 function Morphism(mraw, pool) {
   errors = validateM(mraw, pool)
   if (errors.msg.length > 0) {
+    console.log(errors.msg)
     return
   }
     
@@ -129,7 +156,8 @@ function Morphism(mraw, pool) {
 
 function AlgebraicStructure(struct, pool) {
   errors = validateAS(struct, pool);
-  if (errors.msg.length > 0) {
+  if (errors.msg.length > 0 || !SimpleAssociativityTest(struct)) {
+    console.log(errors.msg)
     return
   }
   
