@@ -51,8 +51,8 @@ class MorphismVis
     console.log(data.to.elements); 
     data.from.elements.forEach((d, i) -> 
       if (indexof(data.map(d), data.to.elements) != -1)
-        links.push({source: d, target: data.from.elements.length + indexof(data.map(d), data.to.elements), type: "plain"}) )   
-      
+        links.push({source: i, target: data.from.elements.length + indexof(data.map(d), data.to.elements), type: "plain"}) )   
+    
     w = 960;
     h = 500;
    
@@ -178,7 +178,20 @@ class MorphismVis
 HUGE_CRITERIA = 10
 is_str_huge = (structure) -> structure.order > HUGE_CRITERIA
 
+
+
+
 class CayleyTableVis
+  selected_nodes: [];
+  
+  toggleNode: (node) =>
+    if node in this.selected_nodes 
+      this.selected_nodes.splice(this.selected_nodes.indexOf(node), 1) 
+      return false
+    else
+      this.selected_nodes.push(node)
+      return true
+      
   show: (data) ->
     struct = data[0]
     console.log(struct)
@@ -220,10 +233,18 @@ class CayleyTableVis
       .attr("src", (d) -> d.src).attr("dst", (d) -> d.dest)
       .attr("id", (d) -> d.src + "_" + d.dest)
 
+    viz = this
     circle = svg.append("svg:g").selectAll("circle").data(force.nodes()).enter().append("svg:circle")
       .attr("r", 6).style("fill", "gray")
+      .on("click", (d) -> 
+        if viz.toggleNode(d) 
+          d3.select(this).style("fill", "red");
+        else
+          d3.select(this).style("fill", "gray");
+        console.log(viz.selected_nodes)
+      )
       .on("mouseover", (d) ->
-        d3.select(this).style("fill", "orange");
+        d3.select(this).style("fill", "orange") if d not in viz.selected_nodes;
         d3.selectAll("path.link").filter((el) -> el.src == d.ind).attr("class", "link selected")
         
         if is_str_huge(struct)
@@ -231,7 +252,7 @@ class CayleyTableVis
             d3.select("#t_#{d.ind}_#{i}").attr("class", "visible")
       )
       .on("mouseout", (d) ->
-        d3.select(this).style("fill", "gray");
+        d3.select(this).style("fill", "gray") if d not in viz.selected_nodes;
         d3.selectAll("path").attr("class", "link plain")
 
         if is_str_huge(struct)
