@@ -1,17 +1,31 @@
-class Rem5
-  mult_t: [[0,1,2,3,4],[1,2,3,4,0],[2,3,4,0,1],[3,4,0,1,2],[4,0,1,2,3]]
-  one: 0
-  inv: {0:0, 1:4, 2:3, 3:2, 4:1}
-  el_to_int: {0:0, 1:1, 2:2, 3:3, 4:4}
-  members: [0, 1, 2, 3, 4]
-
+class Group
+  constructor: (@mult_t, @one, @inv, @el_to_int, @members) ->
+  
   get_inverse: (x) -> inv[x]
   mul_a_b: (a,b) -> 
     @mult_t[@el_to_int[a]][@el_to_int[b]]
   is_member: (x) -> @el_to_int[a]?
 
-class Rem5Provider
-  parse: () -> new Rem5()
+
+class AddRemProvider
+  parse: (data) -> 
+    max = data[0]
+
+    elems = [0..max-1]
+    el_to_int = {}
+    inv = {}
+    for i in elems
+      el_to_int[i] = i
+      inv[i] = Math.abs(max - i)
+
+    mult_t = []
+    tmp_el = elems[..]
+    for i in [0..max-1]
+      mult_t.push(tmp_el)
+      fst = tmp_el[0]
+      tmp_el = tmp_el[1..]
+      tmp_el.push(fst)
+    new Group(mult_t, 0, inv, el_to_int, elems[..])
 
 class RawDataParser
   parse: () -> 
@@ -24,8 +38,8 @@ class MulElAndSet
       return (group.mul_a_b(el, set_el) for set_el in set)
 
 class SimpleMul
-  exec: (args) ->
-    return args[2].mul_a_b(args[0], args[1]);
+  exec: (obj, args) ->
+    return obj.mul_a_b(args[0], args[1]);
 
 class IsSubGroup
   exec: (base, sub) ->
@@ -44,32 +58,69 @@ class ApplyMorphism
 
 operation_pool = {"a*b":new SimpleMul,"g*H": new MulElAndSet, "isSub": new IsSubGroup, "f(g)": new ApplyMorphism}
 
+OUTDEVICE_ID = "#grot"
 
 class SimpleVis
   show: (data) -> 
     alert(data)
 
-vis_pool = {"ANY": new SimpleVis}
+class SimplePointsVis
+  show: (data) ->
+    sampleSVG = d3.select(OUTDEVICE_ID)
+      .append("svg").attr("width", 800).attr("height", 600);
+    
+    g = sampleSVG.selectAll("g.node")
+      .data(data)
+      .enter()
+      .append("svg:g")
+      .attr("class", "node")
+      .attr("transform", (d) -> "translate(" + d.x + ","+ d.y + ")")
+    
+    
+    g.append("svg:circle")
+      .attr("r", 20)
+      .attr("cx", (d, i) -> 50*i + 50)
+      .attr("cy", 50)
+      .style("fill", "white")
+      .style("stroke", "gray")
+    
+    g.append("svg:text")
+      .attr("x", (d, i) -> 50*i + 50)
+      .attr("y", 50)
+      .attr("dy", "0.5ex")
+      .text((d) -> d)
 
+vis_pool = {"ANY": new SimpleVis, "PTS": new SimplePointsVis}
 
-determine_dp = (args) ->
-  dp_type = args[0]
-  switch dp_type
-    when "Rem5" then new Rem5Provider()
+class Action
+  constructor: (@op_id, @vis_id) ->
+  perform_operation: (object, args) ->
+    operation = operation_pool[@op_id]
+    operation.exec(object, args)
+  perform_visualization: (op_data) ->
+    vis = vis_pool[@vis_id]
+    if not (op_data instanceof Array)
+      op_data = [op_data]
+    vis.show(op_data)
+
+determine_dp = (provider_data) ->
+  provider_id = provider_data["id"]
+  switch provider_id
+    when "Rem" then providers["Rem+"].parse(provider_data['args'])
     else new RawDataParser()
 
-process_data = (name, args...) ->
-  dp = determine_dp(args)
-  data = dp.parse()
+process_data = (action_id, provider_data, args...) ->
+  structure = determine_dp(provider_data)
 
   #pick operation
-  operation = operation_pool[name]
-  params = args[1..]
-  params.push(data)
-  result = operation.exec(params)
+  action = actions_pool[action_id]
+  op_data = action.perform_operation(structure, args)
+  action.perform_visualization(op_data)
+  
+providers = {"Rem+": new AddRemProvider, "*": new RawDataParser()} 
 
-  #pick visualizer
-  vis = vis_pool["ANY"]
-  vis.show(result)
+actions_pool = {
+ "mult" : new Action("a*b", "PTS")
+}
 
 window.process_data = process_data

@@ -1,7 +1,7 @@
-Class AlgStructure
+Class AlgebraicStructure
   Represents Algebraic Structure
   
-  id:string - unique name of Algebraic Structure
+  name:string - unique name of algebraic structure
   order:int - order of AS (number of elements)
   elements:array - elements of AS
   neutral - neutral element
@@ -13,9 +13,9 @@ Class AlgStructure
 Class Morphism
   Represents morphism f:A->B
   
-  id:string - unique name of Morphism
-  from:AlgStructure - Algebraic structure A
-  to:AlgStructure = Algebraic structure B
+  name:string - unique name of Morphism
+  from:AlgebraicStructure - algebraic structure A
+  to:AlgebraicStructure = algebraic structure B
   mapsize:int - map's element count
   rawmap:array of [a,b] - raw map of morphism
   map(elem) - return value f(elem), undefined if value f(elem) is undefined =)
@@ -25,14 +25,12 @@ Class Pool
   
   Pool() - constructor
   morphisms:array of Morphism - morphisms in pool
-  structures:array of AlgStructure - algebraic structures in pool
+  structures:array of AlgebraicStructure - algebraic structures in pool
   addStrust(s) - adds AS into pool (for format of agrgument s see sampledata.js), returns undefined if format of s is wrong
   addMorphism(m) - adds morphism into poll (for format of agrgument m see sampledata.js), returns undefined if format of m is wrong
-  structure(id) - returns AS with given id if it's exists in pool, otherwise return undefined
-  morphims(id) - returns morphism with given id if it's exists in pool, otherwise return undefined
-  hasStructure(id) - indicates whether structure with given id exists in pool
-  hasMorphism(id) - indicates whether morphism with given id exists in pool
-  
-  
+  structure(name) - returns AS with given name if it's exists in pool, otherwise return undefined
+  morphims(name) - returns morphism with given name if it's exists in pool, otherwise return undefined
+  hasStructure(name) - indicates whether structure with given name exists in pool
+  hasMorphism(name) - indicates whether morphism with given name exists in pool
   
 For usage example see index.html
