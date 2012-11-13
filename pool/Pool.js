@@ -2,9 +2,11 @@ window.gerror = {}
 window.gerror.msg = []
 
 function SimpleAssociativityTest(as) {
+//  console.log("Starting SAT on" + as.name)
   var count = as.elements.length;
   for (var i = 0; i < count; ++i) {
     var a = as.elements[i]
+//    console.log("testing element: " + a)
     var t1 = [] //for  x (a  y)
     var t2 = [] //for (x  a) y
     for (var ii = 0; ii < count; ++ii) {
@@ -19,10 +21,15 @@ function SimpleAssociativityTest(as) {
         t2[ii][jj] = as.mult(as.mult(as.elements[ii], a), as.elements[jj])
     }
     
+//    console.log(t1)
+//    console.log(t2)
+    
     for (var ii = 0; ii < count; ++ii)
-      for (var jj = 0; jj < count; ++jj)
+      for (var jj = 0; jj < count; ++jj) {
+//        console.log("testing " + t1[ii][jj] + " and " + t2[ii][jj] + " " + (t1[ii][jj] != t2[ii][jj]))
         if (t1[ii][jj] != t2[ii][jj])
           return false
+        }
   }
   return true
 }
