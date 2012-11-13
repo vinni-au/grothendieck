@@ -51,12 +51,7 @@ class MorphismVis
     console.log(data.to.elements); 
     data.from.elements.forEach((d, i) -> 
       if (indexof(data.map(d), data.to.elements) != -1)
-        console.log(d)
-        console.log({source: d, target: data.from.elements.length + indexof(data.map(d), data.to.elements), type: "plain"})
         links.push({source: d, target: data.from.elements.length + indexof(data.map(d), data.to.elements), type: "plain"}) )   
-      
-    console.log(links)
-
       
     w = 960;
     h = 500;
@@ -89,6 +84,7 @@ class MorphismVis
       .charge(10)
       .start();
 
+    d3.select("svg").remove();
     svg = d3.select(OUTDEVICE_ID).append("svg:svg")
       .attr("width", w)
       .attr("height", h);
