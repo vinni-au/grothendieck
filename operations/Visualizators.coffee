@@ -1,5 +1,11 @@
 OUTDEVICE_ID = "#grot"
 
+indexof = (elem, array) ->
+    for i in [0..2]
+      if (elem == array[i])
+        return i
+    return -1
+
 class SimpleVis
   show: (data) -> 
     alert(data)
@@ -32,16 +38,26 @@ class SimplePointsVis
       .text((d) -> d)
       
 class MorphismVis
+    
   show: (data) ->
   
     nodes = []
     data.from.elements.forEach((d, i) ->  nodes.push({x:100, y:100, cluster:1, name: d, fixed:1}));
     data.to.elements.forEach((d, i) ->  nodes.push({x:100, y:100, cluster:2, name: d, fixed:1 }) ); 
     
+    
+    
     links = []
-    data.from.elements.forEach((d, i) ->  links.push({source: d, target: data.from.elements.length + indexof(data.map(d), data.to.elements), type: "plain"}) if indexof(data.map(d) != -1);   
+    console.log(data.to.elements); 
+    data.from.elements.forEach((d, i) -> 
+      if (indexof(data.map(d), data.to.elements) != -1)
+        console.log(d)
+        console.log({source: d, target: data.from.elements.length + indexof(data.map(d), data.to.elements), type: "plain"})
+        links.push({source: d, target: data.from.elements.length + indexof(data.map(d), data.to.elements), type: "plain"}) )   
+      
     console.log(links)
-        
+
+      
     w = 960;
     h = 500;
    
@@ -52,9 +68,7 @@ class MorphismVis
     max_by = 0;
   
     nodes.forEach( (d, i) ->
-    
-      console.log(d);
-  
+      
       if (d.cluster == 2) 
         d.x = t + w/2;
         d.y = (b_count++) * 50;
@@ -162,7 +176,6 @@ class MorphismVis
         dr = Math.sqrt(dx * dx + dy * dy)*2;
         return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
         );
-    );
     );
 
 
