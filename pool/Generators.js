@@ -47,7 +47,7 @@ function GenerateEndomorphism(group, indexes) {
     return und
   
   var morphism = {
-    name: group.name + "_aut" + Math.random(),
+    name: group.name + "_aut#" + Math.floor(Math.random()*10000),
     from: group,
     to: group,
     rawmap: [],
@@ -86,7 +86,7 @@ function GenerateRandomEndomorphism(group) {
 
 function GenerateRandomMorphism(group1, group2) {
   var morphism = {
-    name: group1.name + " to " + group2.name,
+    name: group1.name + " to " + group2.name + " #" + Math.floor(Math.random()*10000),
     from: group1,
     to: group2,
     rawmap:[],
