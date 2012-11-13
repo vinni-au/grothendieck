@@ -64,6 +64,15 @@ function GenerateEndomorphism(group, indexes) {
         return morphism.rawmap[i][1]
   }
   
+  morphism.map_index = function(elem) {
+    for (var i = 0; i < morphism.mapsize; ++i) {
+      if (morphism.rawmap[i][0] == elem)
+        return i
+    }
+    var und
+    return und
+  }
+  
   return morphism
 }
 
@@ -95,6 +104,15 @@ function GenerateRandomMorphism(group1, group2) {
     for (var i = 0; i < morphism.mapsize; ++i)
       if (morphism.rawmap[i][0] == elem)
         return morphism.rawmap[i][1]
+  }
+  
+  morphism.map_index = function(elem) {
+    for (var i = 0; i < morphism.mapsize; ++i) {
+      if (morphism.rawmap[i][0] == elem)
+        return i
+    }
+    var und
+    return und
   }
   
   return morphism
