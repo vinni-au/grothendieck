@@ -19,14 +19,16 @@
       function process_request() {
         dp_id = value_form_select("structure_picker")
         act_id = value_form_select("action_picker")
-
+        $("#grot").html("")
         if (act_id == "mult") {
           el1 = parseInt($("#el1").attr("value"), 10)
           el2 = parseInt($("#el2").attr("value"), 10)
-          $("grot").html("")
 
-          rem_base = parseInt($("base").attr("base"), 10)
+          rem_base = parseInt($("#base").attr("value"), 10)
           process_data(act_id, {"id":dp_id, 'args':[rem_base]}, el1, el2)
+        } else if (act_id == "show_structure") {
+          rem_base = parseInt($("#base").attr("value"), 10)
+          process_data(act_id, {"id":dp_id, 'args':[rem_base]})
         }
       }
 
@@ -67,6 +69,7 @@
       <select id="action_picker" onchange="action_changed()">
         <option value="TBD" >TBD</option>
         <option value="mult" >Perform Operation With Elements</option>
+        <option value="show_structure" >Show Cayley Table</option>
       </select>
       <div id="aux_action_attrs" ></div>
 
