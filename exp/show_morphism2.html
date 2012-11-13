@@ -3,49 +3,12 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title>Morphism Vis</title>
-    <script type="text/javascript" src="d3.v2.js"></script>
-    <style type="text/css">
-
-path.link {
-  fill: none;
-  stroke: #666;
-  stroke-width: 1.5px;
-}
-
-marker#licensing {
-  fill: green;
-}
-
-path.link.licensing {
-  stroke: green;
-}
-
-path.link.resolved {
-  stroke-dasharray: 0,2 1;
-}
-
-circle {
-  fill: #ccc;
-  stroke: #333;
-  stroke-width: 1.5px;
-}
-
-text {
-  font: 10px sans-serif;
-  pointer-events: none;
-}
-
-text.shadow {
-  stroke: #fff;
-  stroke-width: 3px;
-  stroke-opacity: .8;
-}
-
-    </style>
+    <script type="text/javascript" src="../libs/d3.v2.js"></script>
+    <link rel="stylesheet" href="../css/styles.css" />
   </head>
+  
   <body>
     <script type="text/javascript">
-
 
 
 var nodes = [{x:100, y:100, cluster: 2, name: "0", fixed: 1}, 
@@ -63,7 +26,32 @@ var links = [
         
 var w = 960,
     h = 500;
+   
+var t = 50;
+  var a_count = 1;
+  var b_count = 1;
+  var max_ay = 0;
+  var max_by = 0;
+  
+nodes.forEach(function(d, i) {
+    
+    console.log(d);
+  
+    if (d.cluster == 2) {
+      d.x = t + w/2;
+      d.y = (b_count++) * 50;
+      max_by = Math.max(d.y, max_by);
+    }
+    else {
+      d.x = t;
+      d.y = (a_count++) * 50; 
+      max_ay = Math.max(d.y, max_ay); }
+      
+    console.log(d);  
+  });
+  
 
+  
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
@@ -84,6 +72,16 @@ var ellipse_b = svg.append("svg:ellipse")
   .attr("fill", "none")
   .attr("stroke", "#000")
 
+  ellipse_a.attr("cx", t);
+  ellipse_a.attr("cy", 25 + max_ay/2 );
+  ellipse_a.attr("ry", max_ay/2 );
+  ellipse_a.attr("rx", 50 );
+  
+  ellipse_b.attr("cx", t + w/2);
+  ellipse_b.attr("cy", 25 + max_by/2 );
+  ellipse_b.attr("ry", max_by/2 );
+  ellipse_b.attr("rx", 50 );
+  
 // Per-type markers, as they don't inherit styles.
 svg.append("svg:defs").selectAll("marker")
     .data(["plain", "dotted"])
@@ -101,6 +99,9 @@ svg.append("svg:defs").selectAll("marker")
 var path = svg.append("svg:g").selectAll("path")
     .data(force.links())
     .enter().append("svg:path")
+    .attr("fill", "none")
+    .attr("stroke", "#666")
+    .attr("stroke-width", "1.5px")
     .attr("class", function(d) { return "link " + d.type; })
     .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
 
@@ -108,7 +109,9 @@ var circle = svg.append("svg:g").selectAll("circle")
     .data(force.nodes())
   .enter().append("svg:circle")
     .attr("r", 6)
-    //.attr("cy", function(d,i) { return i * 50
+    .attr("fill", "#ccc")
+    .attr("stroke", "#333")
+    .attr("stroke-width", "1.5px")
     .call(force.drag);
 
 var text = svg.append("svg:g").selectAll("g")
@@ -119,43 +122,23 @@ var text = svg.append("svg:g").selectAll("g")
 text.append("svg:text")
     .attr("x", 8)
     .attr("y", ".31em")
+    .attr("stroke", "#fff")
+    .attr("stroke-width", "3px")
+    .attr("stroke-opacity", ".8")
+    .attr("font", "10px sans-serif")
+    .attr("pointer-events", "none")
     .attr("class", "shadow")
     .text(function(d) { return d.name; });
 
 text.append("svg:text")
     .attr("x", 8)
     .attr("y", ".31em")
+    .attr("font", "10px sans-serif")
+    .attr("pointer-events", "none")
     .text(function(d) { return d.name; });
-
+ 
 
 force.on("tick", function(e) {
-  var t = 50;
-  var a_count = 1;
-  var b_count = 1;
-  var max_ay = 0;
-  var max_by = 0;
-  nodes.forEach(function(d, i) {
-    if (d.cluster == 2) {
-      d.x = t + w/2;
-      d.y = (b_count++) * 50;
-      max_by = Math.max(d.y, max_by);
-    }
-    else {
-      d.x = t;
-      d.y = (a_count++) * 50; 
-      max_ay = Math.max(d.y, max_ay); }
-  });
-  
-  ellipse_a.attr("cx", t);
-  ellipse_a.attr("cy", 25 + max_ay/2 );
-  ellipse_a.attr("ry", max_ay/2 );
-  ellipse_a.attr("rx", 50 );
-  
-  ellipse_b.attr("cx", t + w/2);
-  ellipse_b.attr("cy", 25 + max_by/2 );
-  ellipse_b.attr("ry", max_by/2 );
-  ellipse_b.attr("rx", 50 );
-  
   circle.attr("transform", function(d) {
     return "translate(" + d.x + "," + d.y + ")";
   });
