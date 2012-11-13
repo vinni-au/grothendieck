@@ -51,8 +51,8 @@ class MorphismVis
     console.log(data.to.elements); 
     data.from.elements.forEach((d, i) -> 
       if (indexof(data.map(d), data.to.elements) != -1)
-        links.push({source: d, target: data.from.elements.length + indexof(data.map(d), data.to.elements), type: "plain"}) )   
-      
+        links.push({source: i, target: data.from.elements.length + indexof(data.map(d), data.to.elements), type: "plain"}) )   
+    
     w = 960;
     h = 500;
    
