@@ -1,12 +1,27 @@
-
-class MulElAndSet
-  exec: (el, set, group) ->
-    if group.is_member(el)
-      return (group.mul_a_b(el, set_el) for set_el in set)
-
 class SimpleMul
   exec: (obj, args) ->
     return obj.mult(args[0], args[1]);
+
+class SubSetMul
+  exec: (obj, args) ->
+    sub = args[0]
+    results = []
+    listed = {}
+    for el in obj.elements
+      tmp_res = []
+      for sub_el in sub
+        tmp_res.push(obj.mult(el, sub_el.name))
+      is_dup = false
+      for val in tmp_res
+        if listed[val]?      
+          is_dup = true
+          break
+        else
+          listed[val] = true
+      if not is_dup        
+        results.push(tmp_res)
+    [results, obj]
+
 
 class IsSubGroup
   exec: (base, sub) ->
@@ -27,4 +42,5 @@ class ApplyMorphism
   exec: (group, morph) -> morph(el) for el in group.members 
 
 
-operation_pool = {"ID": new Id, "a*b":new SimpleMul,"g*H": new MulElAndSet, "isSub": new IsSubGroup, "f(g)": new ApplyMorphism}
+operation_pool = {
+  "ID": new Id, "a*b":new SimpleMul,"g*H": new SubSetMul, "isSub": new IsSubGroup, "f(g)": new ApplyMorphism}
