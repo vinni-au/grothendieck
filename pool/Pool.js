@@ -1,6 +1,12 @@
 function validateAS(s, pool) {
   error = {}
   error.msg = []
+  
+  if (typeof s.name == 'undefined')
+    error.msg.push("name not defined")
+    
+  if (pool.hasStructure(s))
+    error.msg.push("there's structure already in the pool")
 
   var ecount = -1
   if (typeof s.elements == 'undefined') {
@@ -26,10 +32,10 @@ function validateAS(s, pool) {
     error.msg.push("Operation not defined")
   else {
     if (s.operation.length != ecount)
-      error.msg.push("There's too few rows in Kayley table")
+      error.msg.push("There's too few rows in Cayley table")
     for (var i = 0; i < s.operation.length; ++i) {
       if (s.operation[i].length != ecount) {
-        error.msg.push("There's wrong count in Kayley table's row #" + i)
+        error.msg.push("There's wrong count in Cayley table's row #" + i)
       }
     }
   }
@@ -40,7 +46,7 @@ function validateAS(s, pool) {
       wrongtable = true
     
   if (wrongtable)
-    error.msg.push("Kayley table is wrong - neutral element is not actually neutral")
+    error.msg.push("Cayley table is wrong - neutral element is not actually neutral")
     
   return error
 }
@@ -49,8 +55,11 @@ function validateM(m, pool) {
   error = {}
   error.msg = []
 
-  if (typeof m.id == 'undefined')
-    error.msg.push("ID not defined")
+  if (typeof m.name == 'undefined')
+    error.msg.push("name not defined")
+    
+  if (pool.hasMorphism(m))
+    error.msg.push("There's morphism already")
     
   var from
   var to
@@ -58,7 +67,7 @@ function validateM(m, pool) {
     error.msg.push("From not defined")
   else {
     if (!pool.hasStructure(m.from))
-      error.msg.push("There's no structure with id " + m.from)
+      error.msg.push("There's no structure with name " + m.from)
     else from = pool.structure(m.from)
   }
   
@@ -66,7 +75,7 @@ function validateM(m, pool) {
     error.msg.push("TO is not defined")
   else {
     if (!pool.hasStructure(m.to))
-      error.msg.push("There's no structure with id " + m.to)
+      error.msg.push("There's no structure with name " + m.to)
     else to = pool.structure(m.to)
   }
   
@@ -97,7 +106,7 @@ function Morphism(mraw, pool) {
     return
   }
     
-  this.id = mraw.id
+  this.name = mraw.name
   this.from = pool.structure(mraw.from)
   this.to = pool.structure(mraw.to)
   this.mapsize = mraw.map.length
@@ -118,13 +127,15 @@ function Morphism(mraw, pool) {
   }
 }
 
-function AlgStructure(struct, pool) {
+function AlgebraicStructure(struct, pool) {
   errors = validateAS(struct, pool);
   if (errors.msg.length > 0) {
     return
   }
-  this.id = struct.id
+  
+  this.name = struct.name
   this.order = struct.elements.length
+  this.type = "monoid"
   
   this.elements = []
   for (var i = 0; i < this.order; ++i)
@@ -162,15 +173,19 @@ function AlgStructure(struct, pool) {
     return false
   }
   
+  //check for monoid and group
+  this.properties = []
   //TODO check some properties (cyclic)
-  this.isabelian = true
+  var isabelian = true
   for (var i = 0; i < this.order; ++i)
     for (var j = i; j < this.order; ++j)
       if (i != j)
         if (this.table[i][j] != this.table[j][i]) {
-          this.isabelian = false
+          isabelian = false
           break
-        }    
+        }
+  if (isabelian)
+    this.properties.push("abelian")
 }
 
 function Pool() {
@@ -178,7 +193,7 @@ function Pool() {
   this.morphisms = []
   
   this.addStruct = function (s) {
-    str = new AlgStructure(s, this)
+    str = new AlgebraicStructure(s, this)
     if (typeof str != 'undefined') {
       this.structures.push(str)
       return str
@@ -193,29 +208,29 @@ function Pool() {
     }    
   }
   
-  this.structure = function(id) {
+  this.structure = function(name) {
     for (var i = 0; i < this.structures.length; ++i)
-      if (this.structures[i].id == id)
+      if (this.structures[i].name == name)
         return this.structures[i]
     var und
     return und
   }
   
-  this.morphism = function(id) {
+  this.morphism = function(name) {
     for (var i = 0; i < this.morphisms.length; ++i)
-      if (this.morphisms[i].id == id)
+      if (this.morphisms[i].name == name)
         return this.morphisms[i]
     var und
     return und
   }
   
-  this.hasStructure = function(id) {
-    str = this.structure(id)
+  this.hasStructure = function(name) {
+    str = this.structure(name)
     return typeof str != 'undefined'
   }  
   
-  this.hasMorhpism = function(id) {
-    m = this.morphism(id)
+  this.hasMorphism = function(name) {
+    m = this.morphism(name)
     return typeof m != 'undefined'
   }
 }
