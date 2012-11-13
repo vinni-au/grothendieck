@@ -3,19 +3,76 @@
         <title>canvasExample</title>
     </head>
     <body>
-        <canvas height='320' width='480' id='canvas'>Обновите браузер</canvas>
+        <script src="../libs/jquery-1.8.2.min.js"></script>
         <script src="sampledata.js"></script>
         <script src="Pool.js"></script>
         <script src="Generators.js"></script>
         <script>
           pool = new Pool();
-          s = GenerateRemS(4)
-          pool.structures.push(s)
-          m = GenerateRandomEndomorphism(s)
-          if (typeof m != 'undefined') {
-            pool.morphisms.push(m)
-            console.log(s.elements[1] + " maps to " + m.map(s.elements[1]))
-          }          
+          
+          function update_morphisms() {
+            $("#morph").html('')
+            for (var i = 0; i < pool.morphisms.length; ++i) {
+              $("#morph").append('<option value="' + pool.morphisms[i].name + '">' + pool.morphisms[i].name + '</option>')
+            }
+          }
+          
+          function update_as() {
+            $("#as1").html('')
+            $("#as2").html('')
+            for (var i = 0; i < pool.structures.length; ++i) {
+              $("#as1").append('<option value="' + pool.structures[i].name + '">' + pool.structures[i].name + '</option>')
+              $("#as2").append('<option value="' + pool.structures[i].name + '">' + pool.structures[i].name + '</option>')
+            }
+          }
+          
+          function on_genAS_click() {
+          }
+          
+          function on_genM_click() {
+          }
+          
+          function on_show_click() {
+          }
+          
+          function on_genRem_click() {
+            s = GenerateRemS(genform["mod"].value)
+            pool.structures.push(s)
+            update_as()
+          }
+          
+          function on_genRanM_click() {
+            s1 = pool.structure(genform["as1"].value)
+            s2 = pool.structure(genform["as2"].value)
+            if (typeof s1 != 'undefined' && typeof s2 != 'undefined') 
+              if (s1.name == s2.name) {
+                m = GenerateRandomEndomorphism(s1)
+                if (typeof m != undefined) {
+                    pool.morphisms.push(m)
+                    update_morphisms()
+                  }
+            }
+          }
         </script>
+        <div id="generator">
+        <form name="genform">
+          Raw data:<br/><textarea cols=80 rows=10 name="rawdata"></textarea><br/>
+          <input type="button" value="Generate AS" name="genAS" width=500 heigth=500 onclick="on_genAS_click();" />
+          <input type="button" value="Generate morphism" name="genM" onclick="on_genM_click();" /><br/>
+          <input type="text" value="2" name="mod" id="mod"/>
+          <input type="button" value="Generate Rem(n)+" name="genRem" onclick="on_genRem_click();" /><br/>
+          <input type="button" value="Generate random morphism" name="genRanM" onclick="on_genRanM_click();" />
+        </div>
+        Select AS1:
+        <select id="as1">        
+        </select>
+        Select AS2:
+        <select id="as2">
+        </select>
+        Select morphism:
+        <select id="morph">
+        </select>
+        </form>
+        <input type="button" value="Show this" name="show" onclick="on_show_click();"/>
     </body>
 </html>
