@@ -1,0 +1,16 @@
+body {
+  font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
+  font-size: 90%;
+}
+
+#controls_pane {
+  float:left;
+  width:300pt;
+  min-height:100%;
+  background-color:#D4D4D4;
+  padding: 5pt;
+}
+
+#grot {
+  float:left;
+}

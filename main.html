@@ -2,12 +2,15 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <script type="text/javascript" src="d3.v2.js"></script>
+    <link rel="stylesheet" href="css/jquery-ui-1.9.1.custom.min.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script type="text/javascript" src="libs/d3.v2.js"></script>
+    <script type="text/javascript" src="libs/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="libs/jquery-ui-1.9.1.custom.min.js"></script>
     <script type="text/javascript" src="brain.js"></script>
     <script type="text/javascript">
       function value_form_select(select_id) {
-        select_obj = document.getElementById(select_id)
-        return select_obj.options[select_obj.selectedIndex].value
+        return $('#'+select_id).find(":selected").attr("value");
       }
 
       function process_request() {
@@ -15,29 +18,33 @@
         act_id = value_form_select("action_picker")
 
         if (act_id == "mult") {
-          el1 = parseInt(document.getElementById("el1").value, 10)
-          el2 = parseInt(document.getElementById("el2").value, 10)
-          document.getElementById("grot").innerHTML = ""
+          el1 = parseInt($("#el1").attr("value"), 10)
+          el2 = parseInt($("#el2").attr("value"), 10)
+          $("grot").html("")
 
-          rem_base = parseInt(document.getElementById("base").value, 10)
+          rem_base = parseInt($("base").attr("base"), 10)
           process_data(act_id, {"id":dp_id, 'args':[rem_base]}, el1, el2)
         }
       }
 
       function structure_changed() {
+        var aux_attr = $("#aux_str_attrs")
+        var aux_html = ""
+
         if (value_form_select("structure_picker") == "Rem") {
-          document.getElementById("aux_str_attrs").innerHTML = "Set modulo <input id='base' type='text'></input>"
-        } else {
-          document.getElementById("aux_str_attrs").innerHTML = ""
+          aux_html = "Set modulo <input id='base' type='text'></input>"
         }
+        aux_attr.html(aux_html)
       }
 
       function action_changed() {
+        var aux_attr = $("#aux_action_attrs")
+        var aux_html = ""
         if (value_form_select("action_picker") == "mult") {
-          document.getElementById("aux_action_attrs").innerHTML = "Set el1 <input id='el1' type='text'><br/></input> Set el2 <input id='el2' type='text'></input>"
-        } else {
-          document.getElementById("aux_action_attrs").innerHTML = ""
-        }
+          aux_html = "Set el1 <input id='el1' type='text'><br/></input> Set el2 <input id='el2' type='text'></input>"
+        } 
+
+        aux_attr.html(aux_html)
       }
 
     </script>
@@ -45,23 +52,24 @@
   </head>
 
   <body>
-    <div id="contols" style="float:left; width:300pt; height:200pt;background-color:#FFA500;" >
+    <div id="controls_pane" class="ui-corner-all ui-widget-content" >
       Structure: 
       <select id="structure_picker" onchange="structure_changed()">
         <option value="TBD" >TBD</option>
         <option value="Rem" >Group Rem+</option>
       </select>
       <div id="aux_str_attrs" ></div>
-      <br/>
+
       Action:
       <select id="action_picker" onchange="action_changed()">
         <option value="TBD" >TBD</option>
         <option value="mult" >Perform Operation With Elements</option>
       </select>
       <div id="aux_action_attrs" ></div>
-      <br/>
+
       <button onclick="process_request();">Exec</button>
     </div>
-    <div id="grot" style="float:left;" ></div>
+
+    <div id="grot" ></div>
   </body>
 </html>
