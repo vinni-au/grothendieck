@@ -19,8 +19,12 @@ class IsSubGroup
 
     return true
 
+class Id
+  exec: (obj) -> obj
+  
+
 class ApplyMorphism
   exec: (group, morph) -> morph(el) for el in group.members 
 
 
-operation_pool = {"a*b":new SimpleMul,"g*H": new MulElAndSet, "isSub": new IsSubGroup, "f(g)": new ApplyMorphism}
+operation_pool = {"ID": new Id, "a*b":new SimpleMul,"g*H": new MulElAndSet, "isSub": new IsSubGroup, "f(g)": new ApplyMorphism}
