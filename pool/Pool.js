@@ -24,38 +24,39 @@ function SimpleAssociativityTest(as) {
   return true
 }
 
+//TODO add error to window
 function validateAS(s, pool) {
-  error = {}
-  error.msg = []
+  window.gerror = {}
+  window.gerror.msg = []
   
   if (typeof s.name == 'undefined')
-    error.msg.push("name not defined")
+    window.gerror.msg.push("name not defined")
     
   if (pool.hasStructure(s))
-    error.msg.push("there's structure already in the pool")
+    window.gerror.msg.push("there's structure already in the pool")
 
   var ecount = -1
   if (typeof s.elements == 'undefined') {
-    error.msg.push("Elements not defined")
+    window.gerror.msg.push("Elements not defined")
   } else {
     ecount = s.elements.length
     if (s.elements.length == 0) 
-      error.msg.push("There's no elements")
+      window.gerror.msg.push("There's no elements")
   }
 
   if (typeof s.neutral == 'undefined')
-    error.msg.push("Neutral element is undefined")
+    window.gerror.msg.push("Neutral element is undefined")
   else {
     find = false
     for (var i = 0; i < s.elements.length; ++i)
       if (s.neutral == s.elements[i])
         find = true
       if (!find)
-        error.msg.push("Neutral element doesn't belong to group")
+        window.gerror.msg.push("Neutral element doesn't belong to group")
   }
   
   if (typeof s.operation == 'undefined')
-    error.msg.push("Operation not defined")
+    window.gerror.msg.push("Operation not defined")
   else {
     if (s.operation.length != ecount)
       error.msg.push("There's too few rows in Cayley table")
@@ -72,52 +73,50 @@ function validateAS(s, pool) {
       wrongtable = true
     
   if (wrongtable)
-    error.msg.push("Cayley table is wrong - neutral element is not actually neutral")
-    
-  return error
+    window.gerror.msg.push("Cayley table is wrong - neutral element is not actually neutral")
 }
 
 function validateM(m, pool) {
-  error = {}
-  error.msg = []
+  window.gerror = {}
+  window.gerror.msg = []
 
   if (typeof m.name == 'undefined')
-    error.msg.push("name not defined")
+    window.gerror.msg.push("name not defined")
     
   if (pool.hasMorphism(m))
-    error.msg.push("There's morphism already")
+    window.gerror.msg.push("There's morphism already")
     
   var from
   var to
   if (typeof m.from == 'undefined')
-    error.msg.push("From not defined")
+    window.gerror.msg.push("From not defined")
   else {
     if (!pool.hasStructure(m.from))
-      error.msg.push("There's no structure with name " + m.from)
+      window.gerror.msg.push("There's no structure with name " + m.from)
     else from = pool.structure(m.from)
   }
   
   if (typeof m.to == 'undefined')
-    error.msg.push("TO is not defined")
+    window.gerror.msg.push("TO is not defined")
   else {
     if (!pool.hasStructure(m.to))
-      error.msg.push("There's no structure with name " + m.to)
+      window.gerror.msg.push("There's no structure with name " + m.to)
     else to = pool.structure(m.to)
   }
   
   if (typeof m.map == 'undefined')
-    error.msg.push("Mapping not defined")
+    window.gerror.msg.push("Mapping not defined")
   else {
     mapsize = m.map.length
     if (typeof from != 'undefined' && typeof to != 'undefined') {
       if (mapsize > from.order)
-        error.msg.push("Map size should not be greater than from.order")
+        window.gerror.msg.push("Map size should not be greater than from.order")
       else {
           for (var i = 0; i < mapsize; ++i) {
             if (!from.hasElement(m.map[i][0]))
-              error.msg.push("Map is wrong - there's no element " + m.map[i][0] + " in From")
+              window.gerror.msg.push("Map is wrong - there's no element " + m.map[i][0] + " in From")
             if (!to.hasElement(m.map[i][1]))
-              error.msg.push("Map is wrong - there's no element " + m.map[i][1] + " in To")
+              window.gerror.msg.push("Map is wrong - there's no element " + m.map[i][1] + " in To")
           }
           //TODO detect duplicate keys
       }
@@ -127,9 +126,9 @@ function validateM(m, pool) {
 }
 
 function Morphism(mraw, pool) {
-  errors = validateM(mraw, pool)
-  if (errors.msg.length > 0) {
-    console.log(errors.msg)
+  if (window.gerror.msg.length > 0) {
+    console.log(window.gerror.msg)
+    window.gerror = {}
     return
   }
     
@@ -155,8 +154,9 @@ function Morphism(mraw, pool) {
 }
 
 function AlgebraicStructure(struct, pool) {
-  errors = validateAS(struct, pool);
-  if (errors.msg.length > 0) {
+  if (window.gerror.msg.length > 0) {
+    console.log(window.gerror.msg)
+    window.gerror = {}
     return
   }
   
@@ -262,4 +262,11 @@ function Pool() {
     m = this.morphism(name)
     return typeof m != 'undefined'
   }
+}
+
+function indexof(elem, array) {
+  for (var i = 0; i < array.length; ++i)
+    if (elem == array[i])
+      return i
+  return -1
 }
