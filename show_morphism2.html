@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Morphism Vis</title>
+    <script type="text/javascript" src="../libs/d3.v2.js"></script>
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
+  
+  <body>
+    <script type="text/javascript">
+
+
+var nodes = [{x:100, y:100, cluster: 2, name: "0", fixed: 1}, 
+        {x:100, y:100, cluster: 1, name: "a", fixed: 1}, 
+        {x:100, y:100, cluster: 1, name: "b", fixed: 1},
+        {x:100, y:100, cluster: 1, name: "c", fixed: 1},
+        {x:100, y:100, cluster: 1, name: "d", fixed: 1},
+        {x:150, y:100, cluster: 2, name: "1", fixed: 1}];
+
+var links = [
+  {source: 1, target: 0, type: "plain"},
+  {source: 2, target: 0, type: "plain"},
+  {source: 3, target: 5, type: "plain"}
+];        
+        
+var w = 960,
+    h = 500;
+   
+var t = 50;
+  var a_count = 1;
+  var b_count = 1;
+  var max_ay = 0;
+  var max_by = 0;
+  
+nodes.forEach(function(d, i) {
+    
+    console.log(d);
+  
+    if (d.cluster == 2) {
+      d.x = t + w/2;
+      d.y = (b_count++) * 50;
+      max_by = Math.max(d.y, max_by);
+    }
+    else {
+      d.x = t;
+      d.y = (a_count++) * 50; 
+      max_ay = Math.max(d.y, max_ay); }
+      
+    console.log(d);  
+  });
+  
+
+  
+var force = d3.layout.force()
+    .nodes(d3.values(nodes))
+    .links(links)
+    .size([w, h])
+    .linkDistance(60)
+    .charge(10)
+    .start();
+
+var svg = d3.select("body").append("svg:svg")
+    .attr("width", w)
+    .attr("height", h);
+    
+var ellipse_a = svg.append("svg:ellipse")
+  .attr("fill", "none")
+  .attr("stroke", "#000")
+  
+var ellipse_b = svg.append("svg:ellipse")
+  .attr("fill", "none")
+  .attr("stroke", "#000")
+
+  ellipse_a.attr("cx", t);
+  ellipse_a.attr("cy", 25 + max_ay/2 );
+  ellipse_a.attr("ry", max_ay/2 );
+  ellipse_a.attr("rx", 50 );
+  
+  ellipse_b.attr("cx", t + w/2);
+  ellipse_b.attr("cy", 25 + max_by/2 );
+  ellipse_b.attr("ry", max_by/2 );
+  ellipse_b.attr("rx", 50 );
+  
+// Per-type markers, as they don't inherit styles.
+svg.append("svg:defs").selectAll("marker")
+    .data(["plain", "dotted"])
+  .enter().append("svg:marker")
+    .attr("id", String)
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 15)
+    .attr("refY", -1.5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+    .append("svg:path")
+    .attr("d", "M0,-5L10,0L0,0");
+
+var path = svg.append("svg:g").selectAll("path")
+    .data(force.links())
+    .enter().append("svg:path")
+    .attr("fill", "none")
+    .attr("stroke", "#666")
+    .attr("stroke-width", "1.5px")
+    .attr("class", function(d) { return "link " + d.type; })
+    .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+
+var circle = svg.append("svg:g").selectAll("circle")
+    .data(force.nodes())
+  .enter().append("svg:circle")
+    .attr("r", 6)
+    .attr("fill", "#ccc")
+    .attr("stroke", "#333")
+    .attr("stroke-width", "1.5px")
+    .call(force.drag);
+
+var text = svg.append("svg:g").selectAll("g")
+    .data(force.nodes())
+  .enter().append("svg:g");
+
+// A copy of the text with a thick white stroke for legibility.
+text.append("svg:text")
+    .attr("x", 8)
+    .attr("y", ".31em")
+    .attr("stroke", "#fff")
+    .attr("stroke-width", "3px")
+    .attr("stroke-opacity", ".8")
+    .attr("font", "10px sans-serif")
+    .attr("pointer-events", "none")
+    .attr("class", "shadow")
+    .text(function(d) { return d.name; });
+
+text.append("svg:text")
+    .attr("x", 8)
+    .attr("y", ".31em")
+    .attr("font", "10px sans-serif")
+    .attr("pointer-events", "none")
+    .text(function(d) { return d.name; });
+ 
+
+force.on("tick", function(e) {
+  circle.attr("transform", function(d) {
+    return "translate(" + d.x + "," + d.y + ")";
+  });
+
+  text.attr("transform", function(d) {
+    return "translate(" + d.x + "," + d.y + ")";
+  });
+
+  path.attr("d", function(d) {
+    var dx = d.target.x - d.source.x,
+        dy = d.target.y - d.source.y,
+        dr = Math.sqrt(dx * dx + dy * dy)*2;
+    return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+  });
+
+
+});
+
+    </script>
+  </body>
+</html>

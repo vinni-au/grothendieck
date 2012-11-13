@@ -152,6 +152,15 @@ function Morphism(mraw, pool) {
     var und
     return und
   }
+  
+  this.map_index = function(elem) {
+    for (var i = 0; i < this.mapsize; ++i) {
+      if (this.rawmap[i][0] == elem)
+        return i
+    }
+    var und
+    return und
+  }
 }
 
 function AlgebraicStructure(struct, pool) {
