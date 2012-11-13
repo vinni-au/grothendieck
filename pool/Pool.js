@@ -273,9 +273,4 @@ function Pool() {
   }
 }
 
-function indexof(elem, array) {
-  for (var i = 0; i < array.length; ++i)
-    if (elem == array[i])
-      return i
-  return -1
-}
+
