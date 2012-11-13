@@ -1,12 +1,32 @@
 g3 = {
   name:"g_3",
-  elements:[4,3,2,1],
-  neutral:4,
+  elements:["a","b","c","d"],
+  neutral:"a",
   operation:
-    [[4,3,2,1],
-     [3,1,4,3],
-     [2,4,1,3],
-     [1,2,3,4]]
+    [["a","b","c","d"],
+     ["b","a","d","c"],
+     ["c","d","a","b"],
+     ["d","c","b","a"]]
+}
+
+c4 = {
+  name: "c_4",
+  elements: [1, "i", -1, "-i"],
+  neutral:1,
+  operation:
+    [[1, "i", -1, "-i"],
+    ["i", -1, "-i", 1],
+    [-1, "-i", 1, "i"],
+    ["-i", 1, "i", -1]]
+}
+
+c2 = {
+  name: "c_2",
+  elements: [0,1],
+  neutral: 0,
+  operation:
+    [[0, 1],
+     [1, 0]]
 }
 
 m1 = {
