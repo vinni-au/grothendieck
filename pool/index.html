@@ -1,12 +1,14 @@
+<!DOCTYPE html>
+
 <html>
     <head>
         <title>canvasExample</title>
-    </head>
-    <body>
         <script src="../libs/jquery-1.8.2.min.js"></script>
         <script src="sampledata.js"></script>
         <script src="Pool.js"></script>
         <script src="Generators.js"></script>
+        <script src="../libs/d3.v2.js"></script>
+        <script src="../brain.js"></script>
         <script>
           pool = new Pool();
           
@@ -36,6 +38,7 @@
             s1 = pool.structure(genform["as1"].value)
             s2 = pool.structure(genform["as2"].value)
             m = pool.morphism(genform["morph"].value)
+            window.vis_pool["MOR"].show(m)
           }
           
           function on_genRem_click() {
@@ -57,6 +60,10 @@
             }
           }
         </script>
+    </head>
+    <body>
+        
+        
         <div id="generator">
         <form name="genform">
           Raw data:<br/><textarea cols=80 rows=10 name="rawdata"></textarea><br/>
@@ -77,5 +84,6 @@
         </select>
         </form>
         <input type="button" value="Show this" name="show" onclick="on_show_click();"/>
+        <div id="grot" ></div>
     </body>
 </html>
