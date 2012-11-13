@@ -13,4 +13,29 @@ body {
 
 #grot {
   float:left;
+  overlow: scroll;
+}
+
+path.link {
+  fill: none;
+  stroke: #666;
+  stroke-opacity: 0.1;
+  stroke-width: 1.5px;
+}
+
+path.link.selected {
+  fill: none;
+  stroke-opacity: 1;
+  stroke-width: 1.5px;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
 }
