@@ -67,11 +67,35 @@ function GenerateEndomorphism(group, indexes) {
   return morphism
 }
 
-function GenerateRandomEndomorphism(group)
-{
+function GenerateRandomEndomorphism(group) {
   ind = [0]
   for (var i = 1; i < group.order; ++i)
-    ind.push(Math.floor(Math.random() * (group.order)))
+    ind.push(Math.floor(Math.random() * group.order))
 
   return GenerateEndomorphism(group, ind)  
+}
+
+function GenerateRandomMorphism(group1, group2) {
+  var morphism = {
+    name: group1.name + " to " + group2.name,
+    from: group1,
+    to: group2,
+    rawmap:[],
+    mapsize:group1.order
+  }
+  
+  morphism.rawmap.push([group1.neutral, group2.neutral])
+  for (var i = 1; i < group1.order; ++i) {
+    var r = Math.floor(Math.random()*group2.order)
+    morphism.rawmap.push([group1.elements[i],
+                         group2.elements[r]])
+  }
+  
+  morphism.map = function(elem) {
+    for (var i = 0; i < morphism.mapsize; ++i)
+      if (morphism.rawmap[i][0] == elem)
+        return morphism.rawmap[i][1]
+  }
+  
+  return morphism
 }

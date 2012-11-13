@@ -55,9 +55,8 @@
           function on_genRanM_click() {
             s1 = pool.structure(genform["as1"].value)
             s2 = pool.structure(genform["as2"].value)
-            if (typeof s1 != 'undefined' && typeof s2 != 'undefined') 
-              if (s1.name == s2.name) {
-                m = GenerateRandomEndomorphism(s1)
+            if (typeof s1 != 'undefined' && typeof s2 != 'undefined') {
+                m = GenerateRandomMorphism(s1, s2)
                 if (typeof m != undefined) {
                     pool.morphisms.push(m)
                     update_morphisms()
