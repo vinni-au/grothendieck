@@ -1,7 +1,7 @@
 OUTDEVICE_ID = "#grot"
 
 indexof = (elem, array) ->
-    for i in [0..2]
+    for i in [0..array.length]
       if (elem == array[i])
         return i
     return -1
