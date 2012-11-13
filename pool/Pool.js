@@ -156,8 +156,7 @@ function Morphism(mraw, pool) {
 
 function AlgebraicStructure(struct, pool) {
   errors = validateAS(struct, pool);
-  if (errors.msg.length > 0 || !SimpleAssociativityTest(struct)) {
-    console.log(errors.msg)
+  if (errors.msg.length > 0) {
     return
   }
   
@@ -222,18 +221,18 @@ function Pool() {
   
   this.addStruct = function (s) {
     str = new AlgebraicStructure(s, this)
-    if (typeof str != 'undefined') {
+    if (typeof str.name != 'undefined') {
       this.structures.push(str)
-      return str
     }
+    return str
   }
   
   this.addMorphism = function(m) {
     m = new Morphism(m, this)
-    if (typeof m != 'undefined') {
+    if (typeof m.name != 'undefined') {
       this.morphisms.push(m)
-      return m
     }    
+    return m
   }
   
   this.structure = function(name) {

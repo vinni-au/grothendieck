@@ -27,9 +27,17 @@
           }
           
           function on_genAS_click() {
+            s = eval('(' + genform["rawdata"].value + ')')
+            s = pool.addStruct(s)
+            if (typeof s.name != 'undefined')
+              update_as()
           }
           
           function on_genM_click() {
+            m = eval('(' + genform["rawdata"].value + ')')
+            m = pool.addMorphism(m)
+            if (typeof m.name != 'undefined')
+              update_morhisms()
           }
           
           function on_show_click() {
