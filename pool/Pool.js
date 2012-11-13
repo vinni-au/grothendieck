@@ -1,3 +1,6 @@
+window.gerror = {}
+window.gerror.msg = []
+
 function SimpleAssociativityTest(as) {
   var count = as.elements.length;
   for (var i = 0; i < count; ++i) {
@@ -233,7 +236,7 @@ function Pool() {
     if (typeof str.name != 'undefined') {
       if (SimpleAssociativityTest(str))
         this.structures.push(str)
-      else console.log()
+      else console.log("Associativity test not passed")
     }
     return str
   }
