@@ -40,7 +40,6 @@
           if (act_id == "mult") {
             el1 = parseInt($("#el1").attr("value"), 10)
             el2 = parseInt($("#el2").attr("value"), 10)
-
             process_data(act_id, st_info, el1, el2)
           } else if (act_id == "show_structure") {
             rem_base = parseInt($("#base").attr("value"), 10)
@@ -49,6 +48,10 @@
             //TODO fix this HACK!
             selected_nodes = vis_pool["STR_SHOW"].get_selected_nodes();
             process_data(act_id, st_info, selected_nodes)
+          } else if (act_id == "show_picked_as_group") {
+            selected_nodes = vis_pool["STR_SHOW"].get_selected_nodes();
+            base_struct = vis_pool["STR_SHOW"].get_base_struct()
+            process_data("show_structure", {"id": "from_nodes", 'args':[base_struct, selected_nodes]})
           }
         } finally {
           showErrors()
@@ -255,6 +258,7 @@
         <option value="mult" >Perform Operation With Elements</option>
         <option value="show_structure" >Show Cayley Graph</option>
         <option value="show_coset" >Show Left Coset</option>
+        <option value="show_picked_as_group" >Show Picked As Structure</option>
       </select>
       <div id="aux_action_attrs" ></div>
 

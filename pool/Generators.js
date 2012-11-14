@@ -191,4 +191,46 @@ function GenerateRandomMorphism(group1, group2) {
   return morphism
 }
 
-providers = {"Rem+": GenerateRemS, "Rem*": GenerateGroupRemM, "Raw": GenerateFromRaw} 
+function GenerateSubgroup(args) {
+  validator = args[0]
+  base = args[1][0]
+  sub = args[1][1]
+  if (!validator.exec(base, [sub])) {
+    return {}
+  }
+  console.log(base, sub)
+  var group = {
+    name: "Subgroup of " + base.name,
+    elements: sub,
+    order: sub.length,
+    neutral: base.neutral,
+    properties: [],
+    type: "group",
+    table: [],
+    inv_table: {}
+  }
+
+  group.mult = base.mult;
+
+  for (var i = 0; i < group.order; ++i) {
+    group.table.push([])
+    for (var j = 0; j < group.order; ++j) {
+      group.table[i][j] = base.mult(group.elements[i], group.elements[j])
+      if (group.table[i][j] == base.neutral) {
+        group.inv_table[group.elements[i]] = group.elements[j]
+      }
+    }
+  }      
+  
+  group.hasElement = function(elem) {
+    return group.elements.indexOf(elem) != -1
+  }
+  
+  group.inverse = function(elem) {
+    return group.inv_table[elem]
+  }
+
+  return group
+}
+
+providers = {"Rem+": GenerateRemS, "Rem*": GenerateGroupRemM, "Raw": GenerateFromRaw, "Subgroup": GenerateSubgroup} 

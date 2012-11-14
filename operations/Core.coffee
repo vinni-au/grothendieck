@@ -18,8 +18,11 @@ class MultiplicationAction extends Action
     super object, args
 
   perform_visualization: (op_data) ->
-    super @structure
+    if @vis == null
+      super @structure
+    @vis = vis_pool[@vis_id]
     if @vis_id == "STR_SHOW"
+      @vis.resetAllNodesColor()
       @vis.setNodeColor(op_data, "red")
     
     
@@ -30,6 +33,7 @@ determine_dp = (provider_data) ->
     when "Rem+" then providers["Rem+"](provider_data['args'])
     when "Rem*" then providers["Rem*"](provider_data['args'])
     when "Raw" then providers["Raw"](provider_data['args'])
+    when "from_nodes" then providers["Subgroup"]([operation_pool["subgroupChecker"], provider_data['args']])
     else {}
 
 process_data = (action_id, provider_data, args...) ->
