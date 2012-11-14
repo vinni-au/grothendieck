@@ -76,7 +76,7 @@
       function showErrors() {
         if (gerror.msg.length > 0) {
           $('#errors').html('')
-          $('#notifier').show('blind', {}, 500)
+          $('#notifier').show('blind', {}, 250)
           var html = '<ol>'
           for (var i = 0; i < gerror.msg.length; ++i) {
             html += '<li>' + gerror.msg[i] + '</li>'
@@ -84,11 +84,11 @@
           html += '</ol>'  
           $('#errors').html(html)
           gerror.msg = []
-        }
+        } else hideErrors()
       }
       
       function hideErrors() {
-        $('#notifier').hide('blind', {}, 500)
+        $('#notifier').hide('blind', {}, 250)
       }
 
     </script>
@@ -96,6 +96,7 @@
   </head>
 
   <body>
+    <div id="grot"></div>
     <div id="controls_pane" class="ui-corner-all ui-widget-content" >
       Structure: 
       <select id="structure_picker" onchange="structure_changed()">
@@ -116,13 +117,11 @@
       <button onclick="process_request();">Exec</button>
     </div>
     
-    <div id="notifier" class="ui-corner-all ui-widget-content" style="display:none; position:fixed; left:7px; top:7px; width:415px; background:#f88">
+    <div id="notifier" class="ui-corner-all ui-widget-content" style="display:none; width:415px; background:#f88">
       <h3 style="text-align:center;">Errors</h3>
       <div id="errors" style="position:relative;">
       </div>
-        <center><button onclick="hideErrors();">OK</button></center>
     </div>
 
-    <div id="grot" ></div>
   </body>
 </html>

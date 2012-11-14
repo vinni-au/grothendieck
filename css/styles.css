@@ -4,7 +4,6 @@ body {
 }
 
 #controls_pane {
-  float:left;
   width:300pt;
   min-height:100%;
   background-color:#D4D4D4;
@@ -12,7 +11,9 @@ body {
 }
 
 #grot {
+  position:fixed;
   overflow: hidden;
+  margin-left:320pt;
 }
 
 path.link {
