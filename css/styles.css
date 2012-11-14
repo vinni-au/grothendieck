@@ -11,6 +11,7 @@ body {
 }
 
 #grot {
+  width: 95%
   position:fixed;
   overflow: hidden;
   margin-left:320pt;
