@@ -181,7 +181,8 @@ is_str_huge = (structure) -> structure.order > HUGE_CRITERIA
 class CayleyTableVis
   selected_nodes: [];
   
-  toggleNode: (node) =>
+  get_selected_nodes: () -> @selected_nodes
+  toggleNode: (node) ->
     if node in this.selected_nodes 
       this.selected_nodes.splice(this.selected_nodes.indexOf(node), 1) 
       return false
@@ -190,12 +191,12 @@ class CayleyTableVis
       return true
   
   get_path_id: (d) => "#{d.src}_#{d.dest}"
-  get_link_labels: () -> @link_labels
   show: (data) ->
+    this.selected_nodes = []  
     struct = data[0]
     console.log(struct)
     links = []
-    @link_labels = {}
+    link_labels = {}
     for i in [0..struct.order-1]
       for j in [0..struct.order-1]
         prod = struct.mult(struct.elements[i], struct.elements[j])
@@ -203,10 +204,10 @@ class CayleyTableVis
 
         link_data = { source: i, src: i, dest:prod_i, target: prod_i, type: "plain" } 
         link_id = this.get_path_id(link_data)
-        if @link_labels[link_id]?
-          @link_labels[link_id] = "#{@link_labels[link_id]}, #{struct.elements[j]}"
+        if link_labels[link_id]?
+          link_labels[link_id] = "#{link_labels[link_id]}, #{struct.elements[j]}"
         else
-          @link_labels[link_id] = "#{struct.elements[j]}"
+          link_labels[link_id] = "#{struct.elements[j]}"
           links.push(link_data)
 
     nodes = []
@@ -247,7 +248,6 @@ class CayleyTableVis
           d3.select(this).style("fill", "red");
         else
           d3.select(this).style("fill", "gray");
-        console.log(viz.selected_nodes)
       )
       .on("mouseover", (d) ->
         d3.select(this).style("fill", "orange") if d not in viz.selected_nodes;
@@ -273,7 +273,7 @@ class CayleyTableVis
     text_links = svg.append("svg:g").selectAll("g").data(force.links()).enter().append("svg:text");
     text_links.attr("id", (d) -> "t_#{d.src}_#{d.dest}").attr("class", link_text_style).append("svg:textPath")
       .attr("xlink:href", (d) -> "##{d.src}_#{d.dest}").attr("startOffset", 100)
-      .text((d) -> viz.get_link_labels()[viz.get_path_id(d)])
+      .text((d) -> link_labels[viz.get_path_id(d)])
 
     force.on("tick", (e) ->
       circle.attr("transform", (d) -> "translate(#{d.x}, #{d.y})")
@@ -291,5 +291,69 @@ class CayleyTableVis
       )
     )
 
-vis_pool = {"ANY": new SimpleVis, "PTS": new SimplePointsVis, "STR_SHOW": new CayleyTableVis, "MOR": new MorphismVis}
+class FactorSetVis
+  show: (data) ->
+    cl_by_el = {}
+    cluster = 0
+    for factor_set in data[0]
+      cluster += 1
+      for el in factor_set
+        cl_by_el[el] = cluster
+
+    group = data[1]
+
+    nodes = []
+
+    cl_y = {}
+    for i in [1..cluster]
+      cl_y[i] = 0
+    for memb in group.elements
+      el_cluster = cl_by_el[memb]
+      nodes.push({x: 0, y:cl_y[el_cluster], ind: indexof(memb, group.elements), name: memb, fixed: 1, cluster: el_cluster})
+      cl_y[cl_by_el[memb]] += 50
+      
+    w = 700
+    h = 600
+
+    force = d3.layout.force().nodes(d3.values(nodes)).links([]).size([w, h]).start();
+
+    svg = d3.select(OUTDEVICE_ID).append("svg:svg").attr("width", w).attr("height", h);
+    
+    circle = svg.append("svg:g").selectAll("circle").data(force.nodes()).enter().append("svg:circle")
+      .attr("r", 6).style("fill", (d) -> 
+        res = "#"
+        res += if (d.cluster & 1) != 0 then "FF" else "00"
+        res += if (d.cluster & 2) != 0 then "FF" else "00"
+        res += if (d.cluster & 4) != 0 then "FF" else "00"
+        res
+      )
+      .on("mouseover", (d) ->
+        d3.select(this).style("fill", "orange")
+      )
+      .on("mouseout", (d) ->
+        d3.select(this).style("fill", (d) -> 
+          res = "#"
+          res += if (d.cluster & 1) != 0 then "FF" else "00"
+          res += if (d.cluster & 2) != 0 then "FF" else "00"
+          res += if (d.cluster & 4) != 0 then "FF" else "00"
+          res)
+      ).call(force.drag);
+    
+    text = svg.append("svg:g").selectAll("g").data(force.nodes()).enter().append("svg:g");
+    text.append("svg:text").attr("x", 8).attr("y", ".31em").text((d) -> d.name);
+
+    force.on("tick", (e) ->
+      circle.attr("transform", (d) -> "translate(#{20 + 50 * d.cluster}, #{20 + d.y})")
+      text.attr("transform", (d) -> "translate(#{20 + 50 * d.cluster},#{20 + d.y})")
+    )
+
+
+vis_pool = {
+  "ANY": new SimpleVis,
+  "PTS": new SimplePointsVis,
+  "STR_SHOW": new CayleyTableVis,
+  "MOR": new MorphismVis,
+  "FACT_S": new FactorSetVis
+}
+
 window.vis_pool = vis_pool

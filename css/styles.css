@@ -12,8 +12,7 @@ body {
 }
 
 #grot {
-  float:left;
-  overlow: scroll;
+  overflow: hidden;
 }
 
 path.link {

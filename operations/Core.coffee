@@ -5,7 +5,6 @@ class Action
     operation.exec(object, args)
   perform_visualization: (op_data) ->
     vis = vis_pool[@vis_id]
-    console.log(op_data)
     if not (op_data instanceof Array)
       op_data = [op_data]
     vis.show(op_data)
@@ -20,7 +19,6 @@ determine_dp = (provider_data) ->
 
 process_data = (action_id, provider_data, args...) ->
   structure = determine_dp(provider_data)
-  console.log(structure)
   #pick operation
   action = actions_pool[action_id]
   op_data = action.perform_operation(structure, args)
@@ -29,6 +27,7 @@ process_data = (action_id, provider_data, args...) ->
 actions_pool = {
  "mult" : new Action("a*b", "PTS"),
  "show_structure": new Action("ID", "STR_SHOW")
+ "show_coset": new Action("g*H", "FACT_S")
 }
 
 window.process_data = process_data

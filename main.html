@@ -37,6 +37,10 @@
         } else if (act_id == "show_structure") {
           rem_base = parseInt($("#base").attr("value"), 10)
           process_data(act_id, st_info)
+        } else if (act_id == "show_coset") {
+          //TODO fix this HACK!
+          selected_nodes = vis_pool["STR_SHOW"].get_selected_nodes();
+          process_data(act_id, st_info, selected_nodes)
         }
       }
 
@@ -85,6 +89,7 @@
         <option value="TBD" selected="selected" >TBD</option>
         <option value="mult" >Perform Operation With Elements</option>
         <option value="show_structure" >Show Cayley Table</option>
+        <option value="show_coset" >Show Left Coset</option>
       </select>
       <div id="aux_action_attrs" ></div>
 
