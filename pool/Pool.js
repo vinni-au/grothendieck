@@ -40,14 +40,14 @@ function validateAS(s, pool) {
   window.gerror.msg = []
   
   if (typeof s.name == 'undefined')
-    window.gerror.msg.push("name not defined")
+    window.gerror.msg.push("name is not defined")
     
   if (pool.hasStructure(s))
     window.gerror.msg.push("there's structure already in the pool")
 
   var ecount = -1
   if (typeof s.elements == 'undefined') {
-    window.gerror.msg.push("Elements not defined")
+    window.gerror.msg.push("Elements is not defined")
   } else {
     ecount = s.elements.length
     if (s.elements.length == 0) 
@@ -55,7 +55,7 @@ function validateAS(s, pool) {
   }
 
   if (typeof s.neutral == 'undefined')
-    window.gerror.msg.push("Neutral element is undefined")
+    window.gerror.msg.push("Neutral element is not defined")
   else {
     find = false
     for (var i = 0; i < s.elements.length; ++i)
@@ -66,7 +66,7 @@ function validateAS(s, pool) {
   }
   
   if (typeof s.operation == 'undefined')
-    window.gerror.msg.push("Operation not defined")
+    window.gerror.msg.push("Operation is not defined")
   else {
     if (s.operation.length < ecount)
       window.gerror.msg.push("There's too few rows in Cayley table")
@@ -93,7 +93,7 @@ function validateM(m, pool) {
   window.gerror.msg = []
 
   if (typeof m.name == 'undefined')
-    window.gerror.msg.push("name not defined")
+    window.gerror.msg.push("name is not defined")
     
   if (pool.hasMorphism(m))
     window.gerror.msg.push("There's morphism already")
@@ -101,7 +101,7 @@ function validateM(m, pool) {
   var from
   var to
   if (typeof m.from == 'undefined')
-    window.gerror.msg.push("From not defined")
+    window.gerror.msg.push("From is not defined")
   else {
     if (!pool.hasStructure(m.from))
       window.gerror.msg.push("There's no structure with name " + m.from)
@@ -117,7 +117,7 @@ function validateM(m, pool) {
   }
   
   if (typeof m.map == 'undefined')
-    window.gerror.msg.push("Mapping not defined")
+    window.gerror.msg.push("Mapping is not defined")
   else {
     mapsize = m.map.length
     if (typeof from != 'undefined' && typeof to != 'undefined') {

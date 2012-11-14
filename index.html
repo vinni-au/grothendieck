@@ -21,6 +21,24 @@
             
     });
     
+    function showErrors() {
+      if (gerror.msg.length > 0) {
+        $('#errors').html('')
+        $('#notifier').show('blind', {}, 500)
+        var html = '<ol>'
+        for (var i = 0; i < gerror.msg.length; ++i) {
+          html += '<li>' + gerror.msg[i] + '</li>'
+        }
+        html += '</ol>'  
+        $('#errors').html(html)
+        gerror.msg = []
+      }
+    }
+    
+    function hideErrors() {
+      $('#notifier').hide('blind', {}, 500)
+    }
+
     function ASselect_changed(s) {
       var value = s.value
       if (value == 0) { //generate
@@ -210,7 +228,15 @@
         </div>
       <div id="grot" style="display:none;" >grot here!!</div>
       </div>
-      
+          <div id="notifier" class="ui-corner-all ui-widget-content" style="display:block; position:fixed; left:40px; top:92px; width:400px; background:#f88">
+            <h3 style="text-align:center;">Errors</h3>
+            <div id="errors" style="position:relative;">
+            </div>
+            <center>
+              <button onclick="hideErrors();">OK</button>
+            </center>
+          </div>
+
     </div>
   </body>
 </html>
