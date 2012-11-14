@@ -106,7 +106,7 @@
             width:400,
             height:500
           }, 
-          100, 
+          1000, 
           function () {
             $('#helpbtn').hide()
             $('#hidebtn').show()
@@ -125,7 +125,7 @@
               width:50,
               height:60
             }, 
-            100, 
+            1000, 
             function () {
               $('#hidebtn').hide()
               $('#helpbtn').show()
@@ -135,25 +135,7 @@
         })
       }
       
-      function showinfo() {
-        $('#info').animate({
-            width:180,
-            height:120
-          }, 250,
-          function () {
-        })
-        $('#info').html('')
-      }
-      
-      function hideinfo() {
-        $('#info').html('<h4><a>Show info</a></h4>')
-        $('#info').animate({
-            width:70,
-            height:55
-          }, 250,
-          function () {
-        })
-      }
+
 
     </script>
   
@@ -161,11 +143,7 @@
 
   <body>
     <div id="grot"></div>
-    <div id="info" class="ui-corner-all ui-widget-content" style="display:none; background:#f4f4f4; position:fixed; left:430px; width:70px; height:55px; text-align:center;"
-          onmouseover="showinfo();" onmouseout="hideinfo();">
-        <h4><a>Show info</a></h4>
-    </div>
-    <div id="help" style="border:1px solid #aaa; padding:5px; position:fixed; float:right; right:5px; width:50px; height:60px; overflow:auto; background:#f4f4f4" class="ui-corner-all">
+    <div id="help" style="position:fixed; float:right; right:5px; width:50px; height:60px; overflow:auto; background:#f4f4f4" class="ui-corner-all">
       <div id="helpbtn" style="text-align:right;">
         <h3><a href="#" onclick="showhelp();">Help</a></h3>
       </div>
@@ -241,8 +219,7 @@
         </div>
 
     </div><!-- HELP -->
-
-    <div id="controls_pane" class="ui-corner-all ui-widget-content" style="z-index:10;">
+    <div id="controls_pane" class="ui-corner-all ui-widget-content" >
       Structure: 
       <select id="structure_picker" onchange="structure_changed()">
         <option value="blank" selected="selected" >Choose structure</option>
@@ -271,6 +248,5 @@
       <div id="errors" style="position:relative;">
       </div>
     </div>
-
   </body>
 </html>

@@ -226,7 +226,7 @@ class CayleyTableVis
 
     nodes = []
 
-    radius = if is_str_huge(struct) then 350 else 200
+    radius = if is_str_huge(struct) then 250 else 200
     curr_alpha = 0
     delta_alpha = 2 * Math.PI / struct.order
 
@@ -234,13 +234,15 @@ class CayleyTableVis
     h = 800
     
     for memb in struct.elements
-      coord_x = radius * Math.cos(curr_alpha) + 500
-      coord_y = radius * Math.sin(curr_alpha) + 420
+      coord_x = radius * Math.cos(curr_alpha) + 350
+      coord_y = radius * Math.sin(curr_alpha) + 270
       nodes.push({x:coord_x, y:coord_y, ind: indexof(memb, struct.elements), name: memb, fixed: 1})
       curr_alpha += delta_alpha  
 
     force = d3.layout.force().nodes(d3.values(nodes)).links(links).size([w, h]).linkDistance(100).charge(10).start();
     svg = d3.select(OUTDEVICE_ID).append("svg:svg")
+        .attr("width", w)
+        .attr("height", h)
         .attr("viewBox", "0, 0, 800, 800")
 
     path = svg.append("svg:g").selectAll("path").data(force.links())
@@ -250,7 +252,7 @@ class CayleyTableVis
 
     viz = this
     circle = svg.append("svg:g").selectAll("circle").data(force.nodes()).enter().append("svg:circle")
-      .attr("r", 12).style("fill", "gray")
+      .attr("r", 8).style("fill", "gray")
       .on("click", (d) -> 
         if viz.toggleNode(d) 
           d3.select(this).style("fill", "red");

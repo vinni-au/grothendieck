@@ -11,9 +11,9 @@ body {
 }
 
 #grot {
-  width:63%;
   position:fixed;
-  margin-left:220pt;
+  overflow: hidden;
+  margin-left:320pt;
 }
 
 path.link {
@@ -35,17 +35,11 @@ circle {
   stroke-width: 1.5px;
 }
 
-text.node_label {
-  font: 17px sans-serif;
-  pointer-events: none;
-}
-
 text.visible {
-  opacity: 0.5;
   font: 12px sans-serif;
   pointer-events: none;
 }
 
 text.invisible {
-  visibility: hidden;
+  visibility: hidden
 }
