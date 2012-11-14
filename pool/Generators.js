@@ -14,6 +14,14 @@ function GenerateRemS(args) {
     group.elements.push(i)
    
   group.mult = function(a,b) {
+    var hasa = group.hasElement(a)
+    var hasb = group.hasElement(b)
+    if (!hasa)
+      window.gerror.msg.push("No element " + a + " in the group")
+    if (!hasb)
+      window.gerror.msg.push("No element " + b + " in the group")
+    if (!hasa || !hasb)
+      return
     return (a+b)%group.order
   }
   

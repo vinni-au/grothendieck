@@ -11,9 +11,10 @@ body {
 }
 
 #grot {
+  width:75%;
   position:fixed;
   overflow: hidden;
-  margin-left:320pt;
+  margin-left:220pt;
 }
 
 path.link {
@@ -47,5 +48,5 @@ text.visible {
 }
 
 text.invisible {
-  visibility: hidden
+  visibility: hidden;
 }
