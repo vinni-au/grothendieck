@@ -18,29 +18,125 @@
             .click(function( event ) {
                 event.preventDefault();
             });
+            
     });
+    
+    function ASselect_changed(s) {
+      var value = s.value
+      if (value == 0) { //generate
+        $('#cas_raw').hide('blind', {}, 250, function() {
+          $('#cas_gen').show('blind', {}, 250)
+        })
+      } else if (value == 1) {
+        $('#cas_gen').hide('blind', {}, 250, function() {
+          $('#cas_raw').show('blind', {}, 250)
+        })
+      }
+    }
+    
+    function Mselect_changed(s) {
+      var value = s.value
+      if (value == 0) { //generate
+        $('#cm_raw').hide('blind', {}, 250, function() {
+          $('#cm_gen').show('blind', {}, 250)
+        })
+      } else if (value == 1) {
+        $('#cm_gen').hide('blind', {}, 250, function() {
+          $('#cm_raw').show('blind', {}, 250)
+        })
+      }
+    }
+    
+    function hideHelp() {
+      $('#help').hide()
+      $('#grot').show()
+    }
+    
+    function showHelp() {
+      hideCMmenu()
+      hideCASmenu()
+      $('#help').show()
+      $('#grot').hide()
+    }
+    
+    function showHM() {
+      $('#hm').animate({width:100}, 500, function() {
+          $('#hm').html('About project')
+        })
+    }
+    
+    function hideHM() {
+      $('#hm').html('')
+      $('#hm').animate({width:30}, 500, function() {
+        })
+    }
+    
+    function showCAS() {
+      $('#cas').animate({width:100}, 500, function() {
+          $('#cas').html('New structure')
+        })
+    }
+    
+    function hideCAS() {
+      $('#cas').html('')
+      $('#cas').animate({width:30}, 500, function() {
+        })
+    }
+    
+    function showCM() {
+      $('#cm').animate({width:100}, 500, function() {
+          $('#cm').html('New morphism')
+        })
+    }
+    
+    function hideCM() {
+      $('#cm').html('')
+      $('#cm').animate({width:30}, 500, function() {
+        })
+    }
+    
+    function showCASmenu() {
+      hideCAS()
+      hideCMmenu()
+      $('#creategroupform').show("blind", {}, 500)
+    }
+    
+    function hideCASmenu() {
+      $('#creategroupform').hide("blind", {}, 500)
+    }
+    
+    function showCMmenu() {
+      hideCM()
+      hideCASmenu()
+      $('#createmorphismform').show("blind", {}, 500)
+    }
+    
+    function hideCMmenu() {
+      $('#createmorphismform').hide("blind", {}, 500)
+    }
     </script>
   </head>
 
-  <body style="background-color:#efe;">
-    <div id="head" style="text-align:center; height:55px;">
+  <body style="background-color:#efe; margin:0px; padding:0px;">
+    <div id="head" style="text-align:center; height:75px;" class="ui-widget-content ui-corner-bottom">
       <h1>Project Grothendieck</h1>
     </div>
     <div id="base" style="margin:15px;">
       
-      <div id="menu" style="float:left; display:none; width:200px; vertical-align:middle;" class="ui-corner-all ui-widget-content">
-        <div id="accordion">
-          <h3 class="ui-widget-header">Algebraic structures</h3>
-            <a href="#" onclick="">Create</a><br/>
-            <a href="#" onclick="">Show</a>
-          <h3 class="ui-widget-header">Morphisms</h3>
-            <a href="#" onclick="">Create</a><br/>
-            <a href="#" onclick="">Show</a>
-        </div>
+      <div id="menu" style="position:fixed; left:0px; top:92px; vertical-align:middle; z-index:1;">
+          <div id="cas" onmouseover="showCAS();" onmouseout="hideCAS();" onclick="showCASmenu(); hideHelp();" class="ui-widget-header ui-corner-right"
+                style="padding-left:5px; background:#ddd; width:30px; height:50px; font-size:14pt;">
+          </div>
+          <div id="cm" onmouseover="showCM();" onmouseout="hideCM();" onclick="showCMmenu(); hideHelp();" class="ui-widget-header ui-corner-right" 
+                style="padding-left:5px; background:#ddd; width:30px; height:50px; font-size:14pt;">
+          </div>
+          <div id="hm" onmouseover="showHM();" onmouseout="hideHM();" onclick="showHelp();" class="ui-widget-header ui-corner-right" 
+                style="padding-left:5px; background:#ddd; width:30px; height:50px; font-size:14pt;">
+          </div>
       </div>
       
-      <div id="main" style="padding-left:220px;">
-        <div id="help" style="display:none;">
+      <div id="main" style="padding-left:25px;">
+        <div id="help" style="display:block;">
           Welcome to Project Grothendieck!
         </div>
         <div id="itemtoshow" style="display:none;">
@@ -48,21 +144,24 @@
             <select width=400>
             </select><br/>
         </div>
-        <div id="creategroupform" class="ui-corner-all ui-widget-content" style="width:400px; text-align:center; display:block; background:#ccc;">
+        
+        <!-- CREATE AS FORM -->
+        <div id="creategroupform" class="ui-corner-all ui-widget-content" style="width:400px; text-align:center; display:none; background:#ccc; position:fixed;">
+          <div style="position:relative; top:0px; float:right;"><a href="#" onclick="hideCASmenu();">X</a></div>
           <h3>Create new algebraic structure</h3>
           Select creation method:
-            <select>
-              <option>Generate</option>
-              <option>From raw data</option>
+            <select onchange="ASselect_changed(this);">
+              <option value="0">Generate</option>
+              <option value="1">From raw data</option>
             </select><br/>
-            <div style="display:none;">
+            <div id="cas_raw" style="display:none;">
             Raw data (see format description <a href="#">here</a>):<br/>
             <textarea>
             
             </textarea><br/>
             <button>Create!</button>
            </div>
-          <div style="display:block;">
+          <div id="cas_gen" style="display:block;">
             Select generator:
             <select>
               <option>Rem(n)+</option>
@@ -72,20 +171,23 @@
             <button>Generate!</button>
           </div>
         </div>
-        <div id="createmorphismform" class="ui-corner-all ui-widget-content" style="display:none; width:400px; text-align:center; background:#ccc">
+        
+        <!-- CREATE MORPHISM FORM -->
+        <div id="createmorphismform" class="ui-corner-all ui-widget-content" style="position:fixed; display:none; width:400px; text-align:center; background:#ccc">
+          <div style="position:relative; top:0px; float:right;"><a href="#" onclick="hideCMmenu();">X</a> </div>
         <h3>Create new morphism</h3>
-          <div style="display:block;">
             Select creation method:
-            <select>
-              <option>From raw data</option>
-              <option>Using generator</option>
+            <select onchange="Mselect_changed(this);">
+              <option value="0">Using generator</option>
+              <option value="1">From raw data</option>
             </select><br/>
+          <div id="cm_raw" style="display:none;">
             Raw data (see format description <a href="#">here</a>):<br/>
             <textarea cols="45" rows="10"></textarea><br/>
             <button>Create!</button>
             <br/>
           </div>
-          <div style="display:none;">
+          <div id="cm_gen" style="display:block;">
             Select first algebraic structure:
             <select>
               <option>Rem(4)+</option>
@@ -106,7 +208,7 @@
             <button>Generate!</button>
           </div>
         </div>
-      <div id="grot" >grot here!!</div>
+      <div id="grot" style="display:none;" >grot here!!</div>
       </div>
       
     </div>
