@@ -180,6 +180,7 @@ is_str_huge = (structure) -> structure.order > HUGE_CRITERIA
 
 class CayleyTableVis
   selected_nodes: [];
+  circles: null;
   
   get_selected_nodes: () -> @selected_nodes
   toggleNode: (node) ->
@@ -189,6 +190,15 @@ class CayleyTableVis
     else
       this.selected_nodes.push(node)
       return true
+  
+  
+  setNodeColor: (node_name, color) ->
+    console.log(@circles)
+    for circle in @circles[0]
+      console.log(circle)
+      console.log(circle.__data__)
+      if circle.__data__.name == node_name
+        d3.select(circle).style("fill", color);
   
   get_path_id: (d) => "#{d.src}_#{d.dest}"
   show: (data) ->
@@ -226,7 +236,6 @@ class CayleyTableVis
     h = 600
 
     force = d3.layout.force().nodes(d3.values(nodes)).links(links).size([w, h]).linkDistance(60).charge(10).start();
-
     svg = d3.select(OUTDEVICE_ID).append("svg:svg").attr("width", w).attr("height", h);
     ### FIX merkers
     svg.append("svg:defs").selectAll("marker").data(["plain"]).enter().append("svg:marker")
@@ -265,6 +274,7 @@ class CayleyTableVis
           for i in [0..struct.order-1]
             d3.select("#t_#{d.ind}_#{i}").attr("class", "invisible")
       ).call(force.drag);
+    @circles = circle
     
     text = svg.append("svg:g").selectAll("g").data(force.nodes()).enter().append("svg:g");
     text.append("svg:text").attr("x", 8).attr("y", ".31em").text((d) -> d.name);

@@ -1,13 +1,28 @@
 class Action
+  vis: null
   constructor: (@op_id, @vis_id) ->
   perform_operation: (object, args) ->
     operation = operation_pool[@op_id]
     operation.exec(object, args)
   perform_visualization: (op_data) ->
-    vis = vis_pool[@vis_id]
+    @vis = vis_pool[@vis_id]
     if not (op_data instanceof Array)
       op_data = [op_data]
-    vis.show(op_data)
+    @vis.show(op_data)
+    
+class MultiplicationAction extends Action
+  structure: null
+
+  perform_operation: (object, args) ->
+    @structure = object
+    super object, args
+
+  perform_visualization: (op_data) ->
+    super @structure
+    if @vis_id == "STR_SHOW"
+      @vis.setNodeColor(op_data, "red")
+    
+    
 
 determine_dp = (provider_data) ->
   provider_id = provider_data["id"]
@@ -25,7 +40,7 @@ process_data = (action_id, provider_data, args...) ->
   action.perform_visualization(op_data)
 
 actions_pool = {
- "mult" : new Action("a*b", "PTS"),
+ "mult" : new MultiplicationAction("a*b", "STR_SHOW"),
  "show_structure": new Action("ID", "STR_SHOW")
  "show_coset": new Action("g*H", "FACT_S")
 }
