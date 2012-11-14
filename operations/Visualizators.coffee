@@ -281,7 +281,7 @@ class CayleyTableVis
     @circles = circle
     
     text = svg.append("svg:g").selectAll("g").data(force.nodes()).enter().append("svg:g");
-    text.append("svg:text").attr("x", 8).attr("y", ".31em").text((d) -> d.name);
+    text.append("svg:text").attr("class", "node_label").attr("x", 8).attr("y", ".31em").text((d) -> d.name);
 
     link_text_style = if is_str_huge(struct) then "invisible" else "visible"
     text_links = svg.append("svg:g").selectAll("g").data(force.links()).enter().append("svg:text");
