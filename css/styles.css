@@ -13,7 +13,7 @@ body {
 #grot {
   position:fixed;
   overflow: hidden;
-  padding-left:320pt;
+  margin-left:320pt;
 }
 
 path.link {
