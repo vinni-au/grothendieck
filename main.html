@@ -17,30 +17,34 @@
       }
 
       function process_request() {
-        dp_id = value_form_select("structure_picker")
-        act_id = value_form_select("action_picker")
-        $("#grot").html("")
+        try {
+          dp_id = value_form_select("structure_picker")
+          act_id = value_form_select("action_picker")
+          $("#grot").html("")
 
-        st_info = {}
-        if (value_form_select("structure_picker") == "Rem+" || value_form_select("structure_picker") == "Rem*") {
-          rem_base = parseInt($("#base").attr("value"), 10)
-          st_info = {"id":dp_id, 'args':[rem_base]}
-        } else if (value_form_select("structure_picker") == "Raw") {
-          st_info = {"id":dp_id, 'args':[$("#raw_data").attr("value")]}
-        }
+          st_info = {}
+          if (value_form_select("structure_picker") == "Rem+" || value_form_select("structure_picker") == "Rem*") {
+            rem_base = parseInt($("#base").attr("value"), 10)
+            st_info = {"id":dp_id, 'args':[rem_base]}
+          } else if (value_form_select("structure_picker") == "Raw") {
+            st_info = {"id":dp_id, 'args':[$("#raw_data").attr("value")]}
+          }
 
-        if (act_id == "mult") {
-          el1 = parseInt($("#el1").attr("value"), 10)
-          el2 = parseInt($("#el2").attr("value"), 10)
+          if (act_id == "mult") {
+            el1 = parseInt($("#el1").attr("value"), 10)
+            el2 = parseInt($("#el2").attr("value"), 10)
 
-          process_data(act_id, st_info, el1, el2)
-        } else if (act_id == "show_structure") {
-          rem_base = parseInt($("#base").attr("value"), 10)
-          process_data(act_id, st_info)
-        } else if (act_id == "show_coset") {
-          //TODO fix this HACK!
-          selected_nodes = vis_pool["STR_SHOW"].get_selected_nodes();
-          process_data(act_id, st_info, selected_nodes)
+            process_data(act_id, st_info, el1, el2)
+          } else if (act_id == "show_structure") {
+            rem_base = parseInt($("#base").attr("value"), 10)
+            process_data(act_id, st_info)
+          } else if (act_id == "show_coset") {
+            //TODO fix this HACK!
+            selected_nodes = vis_pool["STR_SHOW"].get_selected_nodes();
+            process_data(act_id, st_info, selected_nodes)
+          }
+        } finally {
+          showErrors()
         }
       }
 
@@ -68,6 +72,24 @@
 
         aux_attr.html(aux_html)
       }
+      
+      function showErrors() {
+        if (gerror.msg.length > 0) {
+          $('#errors').html('')
+          $('#notifier').show('blind', {}, 500)
+          var html = '<ol>'
+          for (var i = 0; i < gerror.msg.length; ++i) {
+            html += '<li>' + gerror.msg[i] + '</li>'
+          }
+          html += '</ol>'  
+          $('#errors').html(html)
+          gerror.msg = []
+        }
+      }
+      
+      function hideErrors() {
+        $('#notifier').hide('blind', {}, 500)
+      }
 
     </script>
   
@@ -94,6 +116,13 @@
       <div id="aux_action_attrs" ></div>
 
       <button onclick="process_request();">Exec</button>
+    </div>
+    
+    <div id="notifier" class="ui-corner-all ui-widget-content" style="display:block; position:fixed; left:7px; top:7px; width:415px; background:#f88">
+      <h3 style="text-align:center;">Errors</h3>
+      <div id="errors" style="position:relative;">
+      </div>
+        <center><button onclick="hideErrors();">OK</button></center>
     </div>
 
     <div id="grot" ></div>

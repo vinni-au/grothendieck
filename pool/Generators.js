@@ -133,7 +133,11 @@ function GenerateEndomorphism(group, indexes) {
 pool = new Pool()
 
 function GenerateFromRaw(data) {
+  try {
   s = eval('(' + data[0] + ')')
+  } catch (e) {
+    window.gerror.msg.push(e)
+  }
   return pool.addStruct(s)
 }
 

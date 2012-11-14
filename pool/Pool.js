@@ -68,11 +68,13 @@ function validateAS(s, pool) {
   if (typeof s.operation == 'undefined')
     window.gerror.msg.push("Operation not defined")
   else {
-    if (s.operation.length != ecount)
-      error.msg.push("There's too few rows in Cayley table")
+    if (s.operation.length < ecount)
+      window.gerror.msg.push("There's too few rows in Cayley table")
+    else if (s.operation.length > ecount)
+      window.gerror.msg.push("There's too many rows in Cayley table")
     for (var i = 0; i < s.operation.length; ++i) {
       if (s.operation[i].length != ecount) {
-        error.msg.push("There's wrong count in Cayley table's row #" + i)
+        window.gerror.msg.push("There's wrong elements count in Cayley table's row #" + i)
       }
     }
   }
@@ -132,7 +134,6 @@ function validateM(m, pool) {
       }
     }
   }
-  return error
 }
 
 function Morphism(mraw, pool) {
@@ -173,12 +174,10 @@ function Morphism(mraw, pool) {
 }
 
 function AlgebraicStructure(struct, pool) {
-  if (window.gerror.msg.length > 0) {
-    console.log(window.gerror.msg)
-    window.gerror = {}
+  validateAS(struct, pool)
+  if (window.gerror.msg.length > 0)
     return
-  }
-  
+    
   this.name = struct.name
   this.order = struct.elements.length
   this.type = "monoid"
@@ -243,7 +242,7 @@ function Pool() {
     if (typeof str.name != 'undefined') {
       if (SimpleAssociativityTest(str))
         this.structures.push(str)
-      else console.log("Associativity test not passed")
+      else window.gerror.msg.push("Associativity test not passed")
     }
     return str
   }
