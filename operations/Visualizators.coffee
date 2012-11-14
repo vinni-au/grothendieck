@@ -241,8 +241,7 @@ class CayleyTableVis
 
     force = d3.layout.force().nodes(d3.values(nodes)).links(links).size([w, h]).linkDistance(100).charge(10).start();
     svg = d3.select(OUTDEVICE_ID).append("svg:svg")
-        .attr("width", w)
-        .attr("height", h)
+        .attr("style", "width:100%; height:100%;")
         .attr("viewBox", "0, 0, 800, 800")
 
     path = svg.append("svg:g").selectAll("path").data(force.links())
@@ -326,7 +325,7 @@ class FactorSetVis
 
     force = d3.layout.force().nodes(d3.values(nodes)).links([]).size([w, h]).start();
 
-    svg = d3.select(OUTDEVICE_ID).append("svg:svg").attr("width", w).attr("height", h);
+    svg = d3.select(OUTDEVICE_ID).append("svg:svg").attr("style","width:100%; height:100%;");
     
     circle = svg.append("svg:g").selectAll("circle").data(force.nodes()).enter().append("svg:circle")
       .attr("r", 6).style("fill", (d) -> 
@@ -352,8 +351,8 @@ class FactorSetVis
     text.append("svg:text").attr("x", 8).attr("y", ".31em").text((d) -> d.name);
 
     force.on("tick", (e) ->
-      circle.attr("transform", (d) -> "translate(#{20 + 50 * d.cluster}, #{20 + d.y})")
-      text.attr("transform", (d) -> "translate(#{20 + 50 * d.cluster},#{20 + d.y})")
+      circle.attr("transform", (d) -> "translate(#{250 + 50 * d.cluster}, #{20 + d.y})")
+      text.attr("transform", (d) -> "translate(#{250 + 50 * d.cluster},#{20 + d.y})")
     )
 
 

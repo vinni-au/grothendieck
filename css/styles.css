@@ -11,9 +11,12 @@ body {
 }
 
 #grot {
-  position:fixed;
-  overflow: hidden;
-  margin-left:320pt;
+  position:relative;
+  top:15px;
+  margin-left:100pt;
+  display:inline-block;
+  width:100%;
+  height:100%;
 }
 
 path.link {
