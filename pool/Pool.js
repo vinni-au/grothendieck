@@ -62,7 +62,7 @@ function validateAS(s, pool) {
       if (s.neutral == s.elements[i])
         find = true
       if (!find)
-        window.gerror.msg.push("Neutral element doesn't belong to group")
+        window.gerror.msg.push("Neutral element doesn't belong to algebraic structure")
   }
   
   if (typeof s.operation == 'undefined')
