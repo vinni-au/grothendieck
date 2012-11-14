@@ -35,7 +35,13 @@ circle {
   stroke-width: 1.5px;
 }
 
+text.node_label {
+  font: 17px sans-serif;   
+  pointer-events: none;
+}
+
 text.visible {
+  opacity: 0.5;
   font: 12px sans-serif;
   pointer-events: none;
 }
