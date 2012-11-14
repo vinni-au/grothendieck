@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Project Grothendieck</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="css/jquery-ui-1.9.1.custom.min.css" />
     <link rel="stylesheet" href="css/styles.css" />
@@ -20,7 +21,6 @@
         try {
           dp_id = value_form_select("structure_picker")
           act_id = value_form_select("action_picker")
-          $("#grot").html("")
 
           st_info = {}
           if (value_form_select("structure_picker") == "Rem+" || value_form_select("structure_picker") == "Rem*") {
@@ -28,6 +28,13 @@
             st_info = {"id":dp_id, 'args':[rem_base]}
           } else if (value_form_select("structure_picker") == "Raw") {
             st_info = {"id":dp_id, 'args':[$("#raw_data").attr("value")]}
+          } else if (value_form_select("structure_picker") == "S_3") {
+            raw_s_3 = "{name:'S_3', elements:['123', '213', '132', '321', '231', '312'], neutral:'123',"+
+              "operation: [['123', '213', '132', '321', '231', '312'],"+
+              "['213', '123', '231', '312', '132', '321'], ['132', '312', '123', '231', '321', '213'],"+
+              "['321', '231', '312', '123', '213', '132'], ['231', '321', '213', '132', '312', '123'],"+
+              "['312', '132', '321', '213', '123', '231']]}"
+            st_info = {"id":"Raw", "args": [raw_s_3]}
           }
 
           if (act_id == "mult") {
@@ -100,15 +107,18 @@
     <div id="controls_pane" class="ui-corner-all ui-widget-content" >
       Structure: 
       <select id="structure_picker" onchange="structure_changed()">
-        <option value="Rem+" selected="selected" >Group Rem+</option>
+        <option value="blank" selected="selected" >Choose structure</option>
+        <option value="Rem+" >Group Rem+</option>
         <option value="Rem*" >Group Rem*</option>
+        <option value="S_3" >Group S(3)</option>
         <option value="Raw" >Enter manually</option>
       </select>
       <div id="aux_str_attrs" ></div>
 
       Action:
-      <select id="action_picker" onchange="action_changed()">
-        <option value="mult" selected="selected">Perform Operation With Elements</option>
+      <select id="action_picker" onchange="action_changed()" >
+        <option value="blank" selected="selected" >Choose action</option>
+        <option value="mult" >Perform Operation With Elements</option>
         <option value="show_structure" >Show Cayley Graph</option>
         <option value="show_coset" >Show Left Coset</option>
       </select>

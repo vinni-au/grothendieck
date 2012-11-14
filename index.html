@@ -155,7 +155,71 @@
       
       <div id="main" style="padding-left:25px;">
         <div id="help" style="display:block;">
-          Welcome to Project Grothendieck!
+          <h3>General information</h3>
+          
+          <p> Project Grothendieck is a visualizer of algebraic structures like groups or monoids. You can create algebraic structures with predefined generators or define it manually. Also you can create morphisms.
+          <p> Authors:
+            <ul>
+              <li>Artur Huletsky</li>
+              <li>Arseny Mayorov</li>
+              <li>Anton Storozhev</li>
+            </ul>
+          <p> This project was made in time of <a href="http://mit.spbau.ru/en/about">St. Petersburg Academic Universtity</a> Developer Days (Fall 2012)
+          
+        </div>
+        <div id="helponformat">
+          <h3>Raw format description</h3>
+            Raw format for algebraic structures and morphisms is based on <a href="http://www.json.org/">JSON</a>.
+          <h4>Algebraic structures</h4>
+            <pre>
+{
+  name: "c_4",
+  elements: [1, "i", -1, "-i"],
+  neutral:1,
+  operation:
+    [[ 1, "i", -1, "-i"],
+     ["i", -1, "-i", 1],
+     [-1, "-i", 1, "i"],
+     ["-i", 1, "i", -1]]
+}
+            </pre>
+            <ul>
+              <li>
+                <pre>name</pre> name of algebraic structure
+              </li>
+              <li>
+                <pre>elements</pre> array of elements of algebraic structure. Note that neutral element should be <b>first</b>
+              </li>
+              <li>
+                <pre>neutral</pre> explicit declaration of neutral element of algebraic structure
+              </li>
+              <li>
+                <pre>operation</pre> two-dimensional array representing Cayley table for algebraic structure. Note that first row and first column of table should match array of elements.
+              </li>
+            </ul>
+          <h4>Morphisms</h4>
+            <pre>
+{
+  name:"m3",
+  from:"g_3",
+  to: "g_3",
+  map:
+    [[1,1],
+     [2,3],
+     [3,4],
+     [4,2]]
+}
+            </pre>
+            <ul>
+              <li><pre>name</pre> name of morphism
+              </li>
+              <li><pre>from</pre> name of algebraic structure that is domain
+              </li>
+              <li><pre>to</pre> name of algebraic structure that is codomain
+              </li>
+              <li><pre>map</pre> array of [x, y] where x from domain and y from codomain. Morphism maps x to y.
+              </li>
+            </ul>
         </div>
         <div id="itemtoshow" style="display:none;">
           Select item to show:
@@ -228,7 +292,7 @@
         </div>
       <div id="grot" style="display:none;" >grot here!!</div>
       </div>
-          <div id="notifier" class="ui-corner-all ui-widget-content" style="display:block; position:fixed; left:40px; top:92px; width:400px; background:#f88">
+          <div id="notifier" class="ui-corner-all ui-widget-content" style="display:none; position:fixed; left:40px; top:92px; width:400px; background:#f88">
             <h3 style="text-align:center;">Errors</h3>
             <div id="errors" style="position:relative;">
             </div>

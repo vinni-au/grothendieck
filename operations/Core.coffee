@@ -37,7 +37,8 @@ process_data = (action_id, provider_data, args...) ->
   #pick operation
   action = actions_pool[action_id]
   op_data = action.perform_operation(structure, args)
-  action.perform_visualization(op_data)
+  if window.gerror.msg.length == 0
+    action.perform_visualization(op_data)
 
 actions_pool = {
  "mult" : new MultiplicationAction("a*b", "STR_SHOW"),
