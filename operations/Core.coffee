@@ -18,8 +18,11 @@ class MultiplicationAction extends Action
     super object, args
 
   perform_visualization: (op_data) ->
-    super @structure
+    if @vis == null
+      super @structure
+    @vis = vis_pool[@vis_id]
     if @vis_id == "STR_SHOW"
+      @vis.resetAllNodesColor()
       @vis.setNodeColor(op_data, "red")
     
     
