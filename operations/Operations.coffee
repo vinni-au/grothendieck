@@ -23,14 +23,13 @@ class SubSetMul
 
 error = ""
 class SubGroupChecker
-  exec: (obj, args) ->
+  exec: (obj, args) ->    
     [base, sub] = [obj, args[0]]
+
     if (base.order % sub.length) != 0
       error = "Order of group isn't devided by order of subgroup.<br/> <i>Do you know about Lagrange?</i>"
       window.gerror.msg.push(error)
       return false
-
-    sub =  (el.name for el in sub)
 
     if sub.indexOf(base.neutral) == -1
       error = "Neutral element (#{base.neutral}) is not in a given set.\n #{sub} is not a subgroup"
@@ -66,7 +65,6 @@ class CompositeOperation
 
 class Id
   exec: (obj) -> obj
-  
 
 class ApplyMorphism
   exec: (group, morph) -> morph(el) for el in group.members 
@@ -74,5 +72,7 @@ class ApplyMorphism
 
 operation_pool = {
   "ID": new Id, "a*b":new SimpleMul,
-  "g*H": new CompositeOperation([new SubGroupChecker, new SubSetMul])
-  "f(g)": new ApplyMorphism}
+  "g*H": new CompositeOperation([new SubGroupChecker, new SubSetMul]),
+  "f(g)": new ApplyMorphism,
+  "subgroupChecker": new SubGroupChecker
+}

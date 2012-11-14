@@ -30,6 +30,7 @@ determine_dp = (provider_data) ->
     when "Rem+" then providers["Rem+"](provider_data['args'])
     when "Rem*" then providers["Rem*"](provider_data['args'])
     when "Raw" then providers["Raw"](provider_data['args'])
+    when "from_nodes" then providers["Subgroup"]([operation_pool["subgroupChecker"], provider_data['args']])
     else {}
 
 process_data = (action_id, provider_data, args...) ->

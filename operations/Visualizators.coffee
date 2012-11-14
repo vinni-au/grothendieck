@@ -184,8 +184,10 @@ is_str_huge = (structure) -> structure.order > HUGE_CRITERIA
 class CayleyTableVis
   selected_nodes: [];
   circles: null;
-  
-  get_selected_nodes: () -> @selected_nodes
+  base_struct: null
+
+  get_base_struct: () -> @base_struct
+  get_selected_nodes: () -> (el.name for el in @selected_nodes)
   toggleNode: (node) ->
     if node in this.selected_nodes 
       this.selected_nodes.splice(this.selected_nodes.indexOf(node), 1) 
@@ -207,7 +209,8 @@ class CayleyTableVis
   show: (data) ->
     clear_pane()
     [this.selected_nodes, struct, links, link_labels ]= [[], data[0], [], {}]
-    
+    @base_struct = struct
+
     for i in [0..struct.order-1]
       for j in [0..struct.order-1]
         prod = struct.mult(struct.elements[i], struct.elements[j])
