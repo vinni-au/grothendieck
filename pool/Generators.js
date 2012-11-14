@@ -88,7 +88,7 @@ function GenerateGroupRemM(args) {
   }      
   
   group.hasElement = function(elem) {
-    return (elem >= 0 && elem < group.order)
+    return group.elements.indexOf(elem) != -1
   }
   
   group.inverse = function(elem) {
