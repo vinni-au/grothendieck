@@ -100,6 +100,60 @@
       function hideErrors() {
         $('#notifier').hide('blind', {}, 250)
       }
+      
+      function showhelp() {
+        $('#help').animate( {
+            width:400,
+            height:500
+          }, 
+          1000, 
+          function () {
+            $('#helpbtn').hide()
+            $('#hidebtn').show()
+            $('#about').show('blind', {}, 0, function() {
+              $('#helponformat').show('blind', {}, 0, function() {
+                
+              })
+            })            
+          })
+      }
+      
+      function hidehelp() {
+        $('#helponformat').hide('blind', {}, 0, function() {
+          $('#about').hide('blind', {}, 0, function() {
+          $('#help').animate( {
+              width:50,
+              height:60
+            }, 
+            1000, 
+            function () {
+              $('#hidebtn').hide()
+              $('#helpbtn').show()
+            })
+            
+            })
+        })
+      }
+      
+      function showinfo() {
+        $('#info').animate({
+            width:180,
+            height:120
+          }, 250,
+          function () {
+        })
+        $('#info').html('')
+      }
+      
+      function hideinfo() {
+        $('#info').html('<h4><a>Show info</a></h4>')
+        $('#info').animate({
+            width:70,
+            height:55
+          }, 250,
+          function () {
+        })
+      }
 
     </script>
   
@@ -107,6 +161,86 @@
 
   <body>
     <div id="grot"></div>
+    <div id="info" class="ui-corner-all ui-widget-content" style="background:#f4f4f4; position:fixed; left:430px; width:70px; height:55px; text-align:center;"
+          onmouseover="showinfo();" onmouseout="hideinfo();">
+        <h4><a>Show info</a></h4>
+    </div>
+    <div id="help" style="position:fixed; float:right; right:5px; width:50px; height:60px; overflow:auto; background:#f4f4f4" class="ui-corner-all">
+      <div id="helpbtn" style="text-align:right;">
+        <h3><a href="#" onclick="showhelp();">Help</a></h3>
+      </div>
+      <div id="hidebtn" style="text-align:right; display:none; position:relative; float:right;">
+        <h3><a href="#" onclick="hidehelp();">Hide</a></h3>
+      </div>
+      <div id="about" style="display:none;">
+          <h3>General information</h3>
+          
+          <p> Project Grothendieck is a visualizer of algebraic structures like groups or monoids. You can create algebraic structures with predefined generators or define it manually. Also you can create morphisms.
+          <p> Authors:
+            <ul>
+              <li>Artur Huletsky</li>
+              <li>Arseny Mayorov</li>
+              <li>Anton Storozhev</li>
+            </ul>
+          <p> This project was made in time of <a href="http://mit.spbau.ru/en/about">St. Petersburg Academic Universtity</a> Developer Days (Fall 2012)
+          
+        </div>
+        <div id="helponformat" style="display:none;">
+          <h3>Raw format description</h3>
+            Raw format for algebraic structures and morphisms is based on <a href="http://www.json.org/">JSON</a>.
+          <h4>Algebraic structures</h4>
+            <pre>
+{
+  name: "c_4",
+  elements: [1, "i", -1, "-i"],
+  neutral:1,
+  operation:
+    [[ 1, "i", -1, "-i"],
+     ["i", -1, "-i", 1],
+     [-1, "-i", 1, "i"],
+     ["-i", 1, "i", -1]]
+}
+            </pre>
+            <ul>
+              <li>
+                <pre>name</pre> name of algebraic structure
+              </li>
+              <li>
+                <pre>elements</pre> array of elements of algebraic structure. Note that neutral element should be <b>first</b>
+              </li>
+              <li>
+                <pre>neutral</pre> explicit declaration of neutral element of algebraic structure
+              </li>
+              <li>
+                <pre>operation</pre> two-dimensional array representing Cayley table for algebraic structure. Note that first row and first column of table should match array of elements.
+              </li>
+            </ul>
+          <h4>Morphisms</h4>
+            <pre>
+{
+  name:"m3",
+  from:"g_3",
+  to: "g_3",
+  map:
+    [[1,1],
+     [2,3],
+     [3,4],
+     [4,2]]
+}
+            </pre>
+            <ul>
+              <li><pre>name</pre> name of morphism
+              </li>
+              <li><pre>from</pre> name of algebraic structure that is domain
+              </li>
+              <li><pre>to</pre> name of algebraic structure that is codomain
+              </li>
+              <li><pre>map</pre> array of [x, y] where x from domain and y from codomain. Morphism maps x to y.
+              </li>
+            </ul>
+        </div>
+
+    </div><!-- HELP -->
     <div id="controls_pane" class="ui-corner-all ui-widget-content" >
       Structure: 
       <select id="structure_picker" onchange="structure_changed()">
@@ -136,6 +270,5 @@
       <div id="errors" style="position:relative;">
       </div>
     </div>
-
   </body>
 </html>

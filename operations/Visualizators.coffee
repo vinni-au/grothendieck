@@ -196,12 +196,12 @@ class CayleyTableVis
       this.selected_nodes.push(node)
       return true
   
-  
-  setNodeColor: (node_name, color) ->
-    console.log(@circles)
+  resetAllNodesColor: ->
     for circle in @circles[0]
-      console.log(circle)
-      console.log(circle.__data__)
+      d3.select(circle).style("fill", "gray")
+      
+  setNodeColor: (node_name, color) ->
+    for circle in @circles[0]
       if circle.__data__.name == node_name
         d3.select(circle).style("fill", color);
   
