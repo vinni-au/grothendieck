@@ -5,11 +5,10 @@ class SimpleMul
 class SubSetMul
   exec: (obj, args) ->
     [sub, results, listed] = [args[0], [], {}]
-    
     for el in obj.elements
       tmp_res = []
       for sub_el in sub
-        tmp_res.push(obj.mult(el, sub_el.name))
+        tmp_res.push(obj.mult(el, sub_el))
       is_dup = false
       for val in tmp_res
         if listed[val]?      
@@ -19,6 +18,7 @@ class SubSetMul
           listed[val] = true
       if not is_dup        
         results.push(tmp_res)
+
     [results, obj]
 
 error = ""
