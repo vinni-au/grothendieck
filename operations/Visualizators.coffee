@@ -6,6 +6,8 @@ indexof = (elem, array) ->
         return i
     return -1
 
+clear_pane = () -> $("#grot").html("")
+
 class SimpleVis
   show: (data) -> 
     alert(data)
@@ -13,6 +15,7 @@ class SimpleVis
 
 class SimplePointsVis
   show: (data) ->
+    clear_pane()
     sampleSVG = d3.select(OUTDEVICE_ID)
       .append("svg").attr("width", 700).attr("height", 600);
     
@@ -40,7 +43,7 @@ class SimplePointsVis
 class MorphismVis
     
   show: (data) ->
-  
+    clear_pane()
     nodes = []
     data.from.elements.forEach((d, i) ->  nodes.push({x:100, y:100, cluster:1, name: d, fixed:1}));
     data.to.elements.forEach((d, i) ->  nodes.push({x:100, y:100, cluster:2, name: d, fixed:1 }) ); 
@@ -192,11 +195,9 @@ class CayleyTableVis
   
   get_path_id: (d) => "#{d.src}_#{d.dest}"
   show: (data) ->
-    this.selected_nodes = []  
-    struct = data[0]
-    console.log(struct)
-    links = []
-    link_labels = {}
+    clear_pane()
+    [this.selected_nodes, struct, links, link_labels ]= [[], data[0], [], {}]
+    
     for i in [0..struct.order-1]
       for j in [0..struct.order-1]
         prod = struct.mult(struct.elements[i], struct.elements[j])
@@ -293,18 +294,16 @@ class CayleyTableVis
 
 class FactorSetVis
   show: (data) ->
-    cl_by_el = {}
-    cluster = 0
+    clear_pane()
+    [cl_by_el, cluster]= [{}, 0]
+    
     for factor_set in data[0]
       cluster += 1
       for el in factor_set
         cl_by_el[el] = cluster
 
-    group = data[1]
+    [group, nodes, cl_y] = [data[1], [], {}]
 
-    nodes = []
-
-    cl_y = {}
     for i in [1..cluster]
       cl_y[i] = 0
     for memb in group.elements
