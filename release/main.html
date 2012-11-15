@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Project Grothendieck</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/jquery-ui-1.9.1.custom.min.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script type="text/javascript" src="libs/d3.v2.js"></script>
+    <script type="text/javascript" src="libs/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="libs/jquery-ui-1.9.1.custom.min.js"></script>
+    <script type="text/javascript" src="pool/sampledata.js"></script>
+    <script type="text/javascript" src="pool/Pool.js"></script>
+    <script type="text/javascript" src="pool/Generators.js"></script>
+    <script type="text/javascript" src="brain.js"></script>
+    <script type="text/javascript">
+      function value_form_select(select_id) {
+        return $('#'+select_id).find(":selected").attr("value");
+      }
+
+      function process_request() {
+        try {
+          dp_id = value_form_select("structure_picker")
+          act_id = value_form_select("action_picker")
+
+          st_info = {}
+          if (value_form_select("structure_picker") == "Rem+" || value_form_select("structure_picker") == "Rem*") {
+            rem_base = parseInt($("#base").attr("value"), 10)
+            st_info = {"id":dp_id, 'args':[rem_base]}
+          } else if (value_form_select("structure_picker") == "Raw") {
+            st_info = {"id":dp_id, 'args':[$("#raw_data").attr("value")]}
+          } else if (value_form_select("structure_picker") == "S_3") {
+            raw_s_3 = "{name:'S_3', elements:['123', '213', '132', '321', '231', '312'], neutral:'123',"+
+              "operation: [['123', '213', '132', '321', '231', '312'],"+
+              "['213', '123', '231', '312', '132', '321'], ['132', '312', '123', '231', '321', '213'],"+
+              "['321', '231', '312', '123', '213', '132'], ['231', '321', '213', '132', '312', '123'],"+
+              "['312', '132', '321', '213', '123', '231']]}"
+            st_info = {"id":"Raw", "args": [raw_s_3]}
+          }
+
+          if (act_id == "mult") {
+            el1 = parseInt($("#el1").attr("value"), 10)
+            el2 = parseInt($("#el2").attr("value"), 10)
+            process_data(act_id, st_info, el1, el2)
+          } else if (act_id == "show_structure") {
+            rem_base = parseInt($("#base").attr("value"), 10)
+            process_data(act_id, st_info)
+          } else if (act_id == "show_coset") {
+            //TODO fix this HACK!
+            selected_nodes = vis_pool["STR_SHOW"].get_selected_nodes();
+            process_data(act_id, st_info, selected_nodes)
+          } else if (act_id == "show_picked_as_group") {
+            selected_nodes = vis_pool["STR_SHOW"].get_selected_nodes();
+            base_struct = vis_pool["STR_SHOW"].get_base_struct()
+            process_data("show_structure", {"id": "from_nodes", 'args':[base_struct, selected_nodes]})
+          }
+        } finally {
+          showErrors()
+        }
+      }
+
+      function structure_changed() {
+        var aux_attr = $("#aux_str_attrs")
+        var aux_html = ""
+
+        if (value_form_select("structure_picker") == "Rem+" || value_form_select("structure_picker") == "Rem*") {
+          aux_html = "Set modulo <input id='base' type='text'></input>"
+        } else if (value_form_select("structure_picker") == "Raw") {
+          aux_html = "Raw data:<textarea cols=45 rows=10 id='raw_data'>"+
+            "{\n  name:'sample',\n  elements:['a','b','c'],\n  neutral:'a',\n"+
+            "  operation:\n   [['a','b','c'],\n    ['b','c','a'],\n    ['c','a','b']]\n}"+
+            "</textarea>"
+        }
+        aux_attr.html(aux_html)
+      }
+
+      function action_changed() {
+        var aux_attr = $("#aux_action_attrs")
+        var aux_html = ""
+        if (value_form_select("action_picker") == "mult") {
+          aux_html = "Set el1 <input id='el1' type='text'><br/></input> Set el2 <input id='el2' type='text'></input>"
+        } 
+
+        aux_attr.html(aux_html)
+      }
+      
+      function showErrors() {
+        if (gerror.msg.length > 0) {
+          $('#errors').html('')
+          $('#notifier').show('blind', {}, 250)
+          var html = '<ol>'
+          for (var i = 0; i < gerror.msg.length; ++i) {
+            html += '<li>' + gerror.msg[i] + '</li>'
+          }
+          html += '</ol>'  
+          $('#errors').html(html)
+          gerror.msg = []
+        } else hideErrors()
+      }
+      
+      function hideErrors() {
+        $('#notifier').hide('blind', {}, 250)
+      }
+      
+      function showhelp() {
+        $('#help').animate( {
+            width:400,
+            height:500
+          }, 
+          1000, 
+          function () {
+            $('#helpbtn').hide()
+            $('#hidebtn').show()
+            $('#about').show('blind', {}, 0, function() {
+              $('#helponformat').show('blind', {}, 0, function() {
+                
+              })
+            })            
+          })
+      }
+      
+      function hidehelp() {
+        $('#helponformat').hide('blind', {}, 0, function() {
+          $('#about').hide('blind', {}, 0, function() {
+          $('#help').animate( {
+              width:50,
+              height:60
+            }, 
+            1000, 
+            function () {
+              $('#hidebtn').hide()
+              $('#helpbtn').show()
+            })
+            
+            })
+        })
+      }
+      
+
+
+    </script>
+  
+  </head>
+
+  <body>
+    <div id="help" style="border:1px solid #aaa; padding:5px; position:fixed; float:right; right:5px; width:50px; height:60px; overflow:auto; background:#f4f4f4" class="ui-corner-all">
+      <div id="helpbtn" style="text-align:right;">
+        <h3><a href="#" onclick="showhelp();">Help</a></h3>
+      </div>
+      <div id="hidebtn" style="text-align:right; display:none; position:relative; float:right;">
+        <h3><a href="#" onclick="hidehelp();">Hide</a></h3>
+      </div>
+      <div id="about" style="display:none;">
+          <h3>General information</h3>
+          
+          <p> Project Grothendieck is a visualizer of algebraic structures like groups or monoids. You can create algebraic structures with predefined generators or define it manually. Also you can create morphisms.
+          <p> Authors:
+            <ul>
+              <li>Artur Huletsky</li>
+              <li>Arseny Mayorov</li>
+              <li>Anton Storozhev</li>
+            </ul>
+          <p> This project was made in time of <a href="http://mit.spbau.ru/en/about">St. Petersburg Academic Universtity</a> Developer Days (Fall 2012)
+          
+        </div>
+        <div id="helponformat" style="display:none;">
+          <h3>Raw format description</h3>
+            Raw format for algebraic structures and morphisms is based on <a href="http://www.json.org/">JSON</a>.
+          <h4>Algebraic structures</h4>
+            <pre>
+{
+  name: "c_4",
+  elements: [1, "i", -1, "-i"],
+  neutral:1,
+  operation:
+    [[ 1, "i", -1, "-i"],
+     ["i", -1, "-i", 1],
+     [-1, "-i", 1, "i"],
+     ["-i", 1, "i", -1]]
+}
+            </pre>
+            <ul>
+              <li>
+                <pre>name</pre> name of algebraic structure
+              </li>
+              <li>
+                <pre>elements</pre> array of elements of algebraic structure. Note that neutral element should be <b>first</b>
+              </li>
+              <li>
+                <pre>neutral</pre> explicit declaration of neutral element of algebraic structure
+              </li>
+              <li>
+                <pre>operation</pre> two-dimensional array representing Cayley table for algebraic structure. Note that first row and first column of table should match array of elements.
+              </li>
+            </ul>
+        </div>
+
+    </div><!-- HELP -->
+    <div id="controls_pane" class="ui-corner-all ui-widget-content" >
+      Structure: 
+      <select id="structure_picker" onchange="structure_changed()">
+        <option value="blank" selected="selected" >Choose structure</option>
+        <option value="Rem+" >Group Rem+</option>
+        <option value="Rem*" >Group Rem*</option>
+        <option value="S_3" >Group S(3)</option>
+        <option value="Raw" >Enter manually</option>
+      </select>
+      <div id="aux_str_attrs" ></div>
+
+      Action:
+      <select id="action_picker" onchange="action_changed()" >
+        <option value="blank" selected="selected" >Choose action</option>
+        <option value="mult" >Perform Operation With Elements</option>
+        <option value="show_structure" >Show Cayley Graph</option>
+        <option value="show_coset" >Show Left Coset</option>
+        <option value="show_picked_as_group" >Show Picked As Structure</option>
+      </select>
+      <div id="aux_action_attrs" ></div>
+
+      <button onclick="process_request();">Exec</button>
+    </div>
+    
+    <div id="notifier" class="ui-corner-all ui-widget-content" style="display:none; width:415px; background:#f88">
+      <h3 style="text-align:center;">Errors</h3>
+      <div id="errors" style="position:relative;">
+      </div>
+    </div>
+    <div style="z-index:-1; position:fixed; top:0; width:100%; height:100%">
+    <div id="grot"></div>
+    </div>
+
+  </body>
+</html>

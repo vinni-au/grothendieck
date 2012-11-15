@@ -1,0 +1,2 @@
+You need coffee compiler installed on your system
+Then run operations/link_all.sh to build brain.js
