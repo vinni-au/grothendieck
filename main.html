@@ -29,11 +29,21 @@
           } else if (value_form_select("structure_picker") == "Raw") {
             st_info = {"id":dp_id, 'args':[$("#raw_data").attr("value")]}
           } else if (value_form_select("structure_picker") == "S_3") {
-            raw_s_3 = "{name:'S_3', elements:['123', '213', '132', '321', '231', '312'], neutral:'123',"+
+            /*raw_s_3 = "{name:'S_3', elements:['123', '213', '132', '321', '231', '312'], neutral:'123',"+
               "operation: [['123', '213', '132', '321', '231', '312'],"+
               "['213', '123', '231', '312', '132', '321'], ['132', '312', '123', '231', '321', '213'],"+
               "['321', '231', '312', '123', '213', '132'], ['231', '321', '213', '132', '312', '123'],"+
               "['312', '132', '321', '213', '123', '231']]}"
+            */
+            raw_s_3 = "{ name:'S_3'," +
+              "elements:['(1)(2)(3)', '(1)(23)', '(3)(12)', '(123)', '(132)', '(2)(13)'], neutral:'(1)(2)(3)'," +
+              "operation: [['(1)(2)(3)', '(1)(23)', '(3)(12)', '(123)', '(132)', '(2)(13)']," +
+              "['(1)(23)', '(1)(2)(3)', '(132)', '(2)(13)', '(3)(12)', '(123)']," +
+              "['(3)(12)', '(123)', '(1)(2)(3)', '(1)(23)', '(2)(13)', '(132)']," +
+              "['(123)', '(3)(12)', '(2)(13)', '(132)', '(1)(2)(3)', '(1)(23)']," +
+              "['(132)', '(2)(13)', '(1)(23)', '(1)(2)(3)', '(123)', '(3)(12)']," +
+              "['(2)(13)','(132)', '(123)', '(3)(12)', '(1)(23)', '(1)(2)(3)']]}"
+
             st_info = {"id":"Raw", "args": [raw_s_3]}
           }
 
@@ -210,7 +220,7 @@
       <select id="action_picker" onchange="action_changed()" >
         <option value="blank" selected="selected" >Choose action</option>
         <option value="mult" >Perform Operation With Elements</option>
-        <option value="show_structure" >Show Cayley Graph</option>
+        <option value="show_structure" >Show Operation's Graph</option>
         <option value="show_coset" >Show Left Coset</option>
         <option value="show_picked_as_group" >Show Picked As Structure</option>
       </select>
